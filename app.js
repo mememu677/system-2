@@ -20,15 +20,37 @@ healthTab.onclick = () => {
 // --- 다이어리 기능 ---
 const diaryForm = document.getElementById('diary-form');
 const diaryCat = document.getElementById('diary-category');
-const diaryTitle = document.getElementById('diary-title');
-const diaryContent = document.getElementById('diary-content');
+const diaryTitleGroup = document.getElementById('title-input-group');
+let diaryTitle = document.getElementById('diary-title');
 const diaryEntriesDiv = document.getElementById('diary-entries');
-let diaryEntries = JSON.parse(localStorage.getItem('diaryEntries')) || [];
 
-function saveDiaryEntries() {
-  localStorage.setItem('diaryEntries', JSON.stringify(diaryEntries));
+// 워홀 태그 배열
+const whTags = ['계획수립','진행중','완료','영어공부'];
+
+let diaryEntries = JSON.parse(localStorage.getItem('diaryEntriesV2')) || [];
+
+// 카테고리 선택에 따라 입력폼 전환
+function updateTitleInput() {
+  if (diaryCat.value === "호주 워홀 계획") {
+    // 태그 select로 대체
+    diaryTitleGroup.innerHTML = `
+      <select id="diary-title" required>
+        ${whTags.map(tag=>`<option value="${tag}">${tag}</option>`).join('')}
+      </select>
+    `;
+  } else {
+    diaryTitleGroup.innerHTML = `<input type="text" id="diary-title" placeholder="제목" required />`;
+  }
+  diaryTitle = document.getElementById('diary-title');
 }
+diaryCat.addEventListener('change', updateTitleInput);
+updateTitleInput();
 
+// 저장
+function saveDiaryEntries() {
+  localStorage.setItem('diaryEntriesV2', JSON.stringify(diaryEntries));
+}
+// 렌더링
 function renderDiaryEntries() {
   diaryEntriesDiv.innerHTML = '';
   diaryEntries.forEach((e, i) => {
@@ -41,16 +63,23 @@ function renderDiaryEntries() {
     cat.className = 'entry-category';
     cat.textContent = e.category;
 
-    const title = document.createElement('span');
-    title.className = 'entry-title';
-    title.textContent = e.title;
+    if (e.category === "호주 워홀 계획") {
+      const tag = document.createElement('span');
+      tag.className = 'entry-tag';
+      tag.textContent = `[${e.title}]`;
+      header.appendChild(cat);
+      header.appendChild(tag);
+    } else {
+      const title = document.createElement('span');
+      title.className = 'entry-title';
+      title.textContent = e.title;
+      header.appendChild(cat);
+      header.appendChild(title);
+    }
 
     const date = document.createElement('span');
     date.className = 'entry-date';
     date.textContent = new Date(e.date).toLocaleString('ko-KR');
-
-    header.appendChild(cat);
-    header.appendChild(title);
     header.appendChild(date);
 
     const content = document.createElement('div');
@@ -77,31 +106,39 @@ function renderDiaryEntries() {
     diaryEntriesDiv.appendChild(div);
   });
 }
-
 function addDiaryEntry(e) {
   e.preventDefault();
   diaryEntries.unshift({
     category: diaryCat.value,
     title: diaryTitle.value,
-    content: diaryContent.value,
+    content: document.getElementById('diary-content').value,
     date: new Date()
   });
   saveDiaryEntries();
   renderDiaryEntries();
   diaryForm.reset();
+  updateTitleInput();
 }
-
 function editDiaryEntry(idx) {
   const e = diaryEntries[idx];
-  const newTitle = prompt('새 제목을 입력하세요', e.title);
-  if (newTitle === null) return;
-  const newContent = prompt('새 내용을 입력하세요', e.content);
-  if (newContent === null) return;
-  const newCategory = prompt('새 카테고리(기본/건강/일정/기록/잡담)', e.category);
-  if (newCategory === null) return;
-  diaryEntries[idx].title = newTitle;
-  diaryEntries[idx].content = newContent;
-  diaryEntries[idx].category = newCategory;
+  if (e.category === "호주 워홀 계획") {
+    const newTag = prompt('새 태그를 입력하세요 (계획수립/진행중/완료/영어공부)', e.title);
+    if (newTag === null) return;
+    const newContent = prompt('새 내용을 입력하세요', e.content);
+    if (newContent === null) return;
+    diaryEntries[idx].title = newTag;
+    diaryEntries[idx].content = newContent;
+  } else {
+    const newTitle = prompt('새 제목을 입력하세요', e.title);
+    if (newTitle === null) return;
+    const newContent = prompt('새 내용을 입력하세요', e.content);
+    if (newContent === null) return;
+    const newCategory = prompt('새 카테고리(기본/건강/일정/기록/잡담/호주 워홀 계획)', e.category);
+    if (newCategory === null) return;
+    diaryEntries[idx].title = newTitle;
+    diaryEntries[idx].content = newContent;
+    diaryEntries[idx].category = newCategory;
+  }
   saveDiaryEntries();
   renderDiaryEntries();
 }
@@ -118,10 +155,10 @@ diaryForm.addEventListener('submit', addDiaryEntry);
 const healthForm = document.getElementById('health-form');
 const healthEntriesDiv = document.getElementById('health-entries');
 const healthMemo = document.getElementById('health-memo');
-let healthEntries = JSON.parse(localStorage.getItem('healthEntries')) || [];
+let healthEntries = JSON.parse(localStorage.getItem('healthEntriesV2')) || [];
 
 function saveHealthEntries() {
-  localStorage.setItem('healthEntries', JSON.stringify(healthEntries));
+  localStorage.setItem('healthEntriesV2', JSON.stringify(healthEntries));
 }
 
 function renderHealthEntries() {
@@ -171,7 +208,6 @@ function renderHealthEntries() {
     healthEntriesDiv.appendChild(div);
   });
 }
-
 function addHealthEntry(e) {
   e.preventDefault();
   const f = healthForm;
@@ -188,10 +224,8 @@ function addHealthEntry(e) {
   renderHealthEntries();
   healthForm.reset();
 }
-
 function editHealthEntry(idx) {
   const e = healthEntries[idx];
-  // 체크박스 항목은 prompt로 묻기 번거로우니, 메모만 빠르게 수정
   const newMemo = prompt('새 메모를 입력하세요', e.memo || "");
   if (newMemo === null) return;
   healthEntries[idx].memo = newMemo;
