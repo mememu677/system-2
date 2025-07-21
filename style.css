@@ -220,6 +220,41 @@ form button:hover {
   border: 2.3px solid #fff;
 }
 
+/* 다이어리 카테고리 필터 */
+#category-filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6em;
+  margin: 0 auto 1.2em auto;
+  padding: 0 1vw;
+}
+
+.cat-btn {
+  font-family: 'Grenze Gotisch', serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  background: #fff;
+  color: #111;
+  border: 2px solid #fff;
+  border-radius: 2.2em;
+  padding: 0.38em 1.25em;
+  min-width: 80px;
+  text-align: center;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: 0 1.5px 8px #0002;
+  transition: background 0.19s, color 0.19s, border 0.18s;
+}
+
+.cat-btn.active {
+  background: #18181b;
+  color: #fff;
+  border: 2px solid #fff;
+}
+
 /* 📱 모바일 최적화 */
 @media (max-width: 600px) {
   .container, section {
@@ -278,7 +313,16 @@ form button:hover {
     letter-spacing: 0.04em;
   }
 
+  .cat-btn {
+    font-size: 0.85rem;
+    padding: 0.3em 0.9em;
+    flex: 1 1 auto;
+    min-width: 65px;
+    max-width: 43vw;
+  }
+
   select, textarea {
     font-size: 0.95rem;
   }
 }
+
