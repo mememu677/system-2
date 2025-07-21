@@ -1,59 +1,39 @@
-const form = document.getElementById('entry-form');
-const titleInput = document.getElementById('entry-title');
-const contentInput = document.getElementById('entry-content');
-const entriesDiv = document.getElementById('entries');
-const catSelect = document.getElementById('entry-category');
-const catFilter = document.getElementById('category-select');
+// --- 탭 전환
+const diaryTab = document.getElementById('tab-diary');
+const healthTab = document.getElementById('tab-health');
+const diarySection = document.getElementById('diary-section');
+const healthSection = document.getElementById('health-section');
 
-// localStorage에서 불러오기 (없으면 빈 배열)
-let entries = JSON.parse(localStorage.getItem('entries_v2')) || [];
-let lastHealth = JSON.parse(localStorage.getItem('health_v2')) || null;
-
-// --- 건강 체크 관련 ---
-const healthForm = document.getElementById('health-form');
-const lastHealthDiv = document.getElementById('last-health');
-function renderHealth() {
-  if (lastHealth) {
-    let checked = [];
-    if (lastHealth.sleep) checked.push('수면');
-    if (lastHealth.meal) checked.push('식사');
-    if (lastHealth.med) checked.push('약 복용');
-    if (lastHealth.mood) checked.push('기분 기록');
-    if (lastHealth.exercise) checked.push('운동');
-    lastHealthDiv.textContent = '최근 건강기록: ' + checked.join(', ') + ' ('+ new Date(lastHealth.date).toLocaleDateString('ko-KR') + ')';
-  } else {
-    lastHealthDiv.textContent = '최근 건강기록 없음';
-  }
-}
-healthForm.onsubmit = e => {
-  e.preventDefault();
-  lastHealth = {
-    sleep: healthForm.sleep.checked,
-    meal: healthForm.meal.checked,
-    med: healthForm.med.checked,
-    mood: healthForm.mood.checked,
-    exercise: healthForm.exercise.checked,
-    date: new Date()
-  };
-  localStorage.setItem('health_v2', JSON.stringify(lastHealth));
-  renderHealth();
+diaryTab.onclick = () => {
+  diaryTab.classList.add('active');
+  healthTab.classList.remove('active');
+  diarySection.style.display = '';
+  healthSection.style.display = 'none';
 };
-renderHealth();
+healthTab.onclick = () => {
+  diaryTab.classList.remove('active');
+  healthTab.classList.add('active');
+  diarySection.style.display = 'none';
+  healthSection.style.display = '';
+};
 
 // --- 다이어리 기능 ---
-function saveEntries() {
-  localStorage.setItem('entries_v2', JSON.stringify(entries));
+const diaryForm = document.getElementById('diary-form');
+const diaryCat = document.getElementById('diary-category');
+const diaryTitle = document.getElementById('diary-title');
+const diaryContent = document.getElementById('diary-content');
+const diaryEntriesDiv = document.getElementById('diary-entries');
+let diaryEntries = JSON.parse(localStorage.getItem('diaryEntries')) || [];
+
+function saveDiaryEntries() {
+  localStorage.setItem('diaryEntries', JSON.stringify(diaryEntries));
 }
 
-function renderEntries() {
-  const filter = catFilter.value;
-  entriesDiv.innerHTML = '';
-  entries.forEach((e, index) => {
-    if (filter !== "전체" && e.category !== filter) return;
-
+function renderDiaryEntries() {
+  diaryEntriesDiv.innerHTML = '';
+  diaryEntries.forEach((e, i) => {
     const div = document.createElement('div');
     div.className = 'entry';
-
     const header = document.createElement('div');
     header.className = 'entry-header';
 
@@ -79,17 +59,14 @@ function renderEntries() {
 
     const buttons = document.createElement('div');
     buttons.className = 'buttons';
-
     const editBtn = document.createElement('button');
     editBtn.className = 'edit';
     editBtn.textContent = '수정';
-    editBtn.onclick = () => editEntry(index);
-
+    editBtn.onclick = () => editDiaryEntry(i);
     const delBtn = document.createElement('button');
     delBtn.className = 'delete';
     delBtn.textContent = '삭제';
-    delBtn.onclick = () => deleteEntry(index);
-
+    delBtn.onclick = () => deleteDiaryEntry(i);
     buttons.appendChild(editBtn);
     buttons.appendChild(delBtn);
 
@@ -97,49 +74,141 @@ function renderEntries() {
     div.appendChild(content);
     div.appendChild(buttons);
 
-    entriesDiv.appendChild(div);
+    diaryEntriesDiv.appendChild(div);
   });
 }
 
-function addEntry(e) {
+function addDiaryEntry(e) {
   e.preventDefault();
-  entries.unshift({
-    title: titleInput.value,
-    content: contentInput.value,
-    category: catSelect.value,
+  diaryEntries.unshift({
+    category: diaryCat.value,
+    title: diaryTitle.value,
+    content: diaryContent.value,
     date: new Date()
   });
-  saveEntries();
-  renderEntries();
-  form.reset();
+  saveDiaryEntries();
+  renderDiaryEntries();
+  diaryForm.reset();
 }
 
-function editEntry(index) {
-  const e = entries[index];
+function editDiaryEntry(idx) {
+  const e = diaryEntries[idx];
   const newTitle = prompt('새 제목을 입력하세요', e.title);
   if (newTitle === null) return;
   const newContent = prompt('새 내용을 입력하세요', e.content);
   if (newContent === null) return;
-  const newCategory = prompt('새 카테고리 입력(기본/건강/일정/기록/잡담)', e.category);
+  const newCategory = prompt('새 카테고리(기본/건강/일정/기록/잡담)', e.category);
   if (newCategory === null) return;
-  entries[index].title = newTitle;
-  entries[index].content = newContent;
-  entries[index].category = newCategory;
-  saveEntries();
-  renderEntries();
+  diaryEntries[idx].title = newTitle;
+  diaryEntries[idx].content = newContent;
+  diaryEntries[idx].category = newCategory;
+  saveDiaryEntries();
+  renderDiaryEntries();
 }
-
-function deleteEntry(index) {
+function deleteDiaryEntry(idx) {
   if (confirm('정말 삭제하시겠습니까?')) {
-    entries.splice(index, 1);
-    saveEntries();
-    renderEntries();
+    diaryEntries.splice(idx, 1);
+    saveDiaryEntries();
+    renderDiaryEntries();
   }
 }
+diaryForm.addEventListener('submit', addDiaryEntry);
 
-form.addEventListener('submit', addEntry);
-catFilter.addEventListener('change', renderEntries);
+// --- 건강체크 기능 ---
+const healthForm = document.getElementById('health-form');
+const healthEntriesDiv = document.getElementById('health-entries');
+const healthMemo = document.getElementById('health-memo');
+let healthEntries = JSON.parse(localStorage.getItem('healthEntries')) || [];
+
+function saveHealthEntries() {
+  localStorage.setItem('healthEntries', JSON.stringify(healthEntries));
+}
+
+function renderHealthEntries() {
+  healthEntriesDiv.innerHTML = '';
+  healthEntries.forEach((e, i) => {
+    const div = document.createElement('div');
+    div.className = 'health-entry';
+    const header = document.createElement('div');
+    header.className = 'health-header';
+    const date = document.createElement('span');
+    date.className = 'health-date';
+    date.textContent = new Date(e.date).toLocaleString('ko-KR');
+    header.appendChild(date);
+
+    const status = document.createElement('div');
+    status.className = 'health-status';
+    let statusArr = [];
+    if (e.sleep) statusArr.push('수면');
+    if (e.meal) statusArr.push('식사');
+    if (e.med) statusArr.push('약');
+    if (e.mood) statusArr.push('기분');
+    if (e.exercise) statusArr.push('운동');
+    status.textContent = statusArr.length ? '체크: ' + statusArr.join(', ') : '체크없음';
+
+    const memo = document.createElement('div');
+    memo.className = 'health-memo';
+    memo.textContent = e.memo || '';
+
+    const buttons = document.createElement('div');
+    buttons.className = 'buttons';
+    const editBtn = document.createElement('button');
+    editBtn.className = 'edit';
+    editBtn.textContent = '수정';
+    editBtn.onclick = () => editHealthEntry(i);
+    const delBtn = document.createElement('button');
+    delBtn.className = 'delete';
+    delBtn.textContent = '삭제';
+    delBtn.onclick = () => deleteHealthEntry(i);
+    buttons.appendChild(editBtn);
+    buttons.appendChild(delBtn);
+
+    div.appendChild(header);
+    div.appendChild(status);
+    div.appendChild(memo);
+    div.appendChild(buttons);
+
+    healthEntriesDiv.appendChild(div);
+  });
+}
+
+function addHealthEntry(e) {
+  e.preventDefault();
+  const f = healthForm;
+  healthEntries.unshift({
+    sleep: f.sleep.checked,
+    meal: f.meal.checked,
+    med: f.med.checked,
+    mood: f.mood.checked,
+    exercise: f.exercise.checked,
+    memo: healthMemo.value,
+    date: new Date()
+  });
+  saveHealthEntries();
+  renderHealthEntries();
+  healthForm.reset();
+}
+
+function editHealthEntry(idx) {
+  const e = healthEntries[idx];
+  // 체크박스 항목은 prompt로 묻기 번거로우니, 메모만 빠르게 수정
+  const newMemo = prompt('새 메모를 입력하세요', e.memo || "");
+  if (newMemo === null) return;
+  healthEntries[idx].memo = newMemo;
+  saveHealthEntries();
+  renderHealthEntries();
+}
+function deleteHealthEntry(idx) {
+  if (confirm('정말 삭제하시겠습니까?')) {
+    healthEntries.splice(idx, 1);
+    saveHealthEntries();
+    renderHealthEntries();
+  }
+}
+healthForm.addEventListener('submit', addHealthEntry);
 
 // 최초 렌더링
-renderEntries();
+renderDiaryEntries();
+renderHealthEntries();
+
 
