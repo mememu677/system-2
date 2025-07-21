@@ -17,22 +17,29 @@ healthTab.onclick = () => {
   healthSection.style.display = '';
 };
 
+// --- 카테고리 필터
+const catBtns = Array.from(document.querySelectorAll('.cat-btn'));
+let selectedCat = "전체";
+catBtns.forEach(btn => {
+  btn.onclick = () => {
+    catBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedCat = btn.dataset.cat;
+    renderDiaryEntries();
+  };
+});
+
 // --- 다이어리 기능 ---
 const diaryForm = document.getElementById('diary-form');
 const diaryCat = document.getElementById('diary-category');
 const diaryTitleGroup = document.getElementById('title-input-group');
 let diaryTitle = document.getElementById('diary-title');
 const diaryEntriesDiv = document.getElementById('diary-entries');
-
-// 워홀 태그 배열
 const whTags = ['계획수립','진행중','완료','영어공부'];
-
 let diaryEntries = JSON.parse(localStorage.getItem('diaryEntriesV2')) || [];
 
-// 카테고리 선택에 따라 입력폼 전환
 function updateTitleInput() {
   if (diaryCat.value === "호주 워홀 계획") {
-    // 태그 select로 대체
     diaryTitleGroup.innerHTML = `
       <select id="diary-title" required>
         ${whTags.map(tag=>`<option value="${tag}">${tag}</option>`).join('')}
@@ -46,14 +53,13 @@ function updateTitleInput() {
 diaryCat.addEventListener('change', updateTitleInput);
 updateTitleInput();
 
-// 저장
 function saveDiaryEntries() {
   localStorage.setItem('diaryEntriesV2', JSON.stringify(diaryEntries));
 }
-// 렌더링
 function renderDiaryEntries() {
   diaryEntriesDiv.innerHTML = '';
   diaryEntries.forEach((e, i) => {
+    if (selectedCat !== "전체" && e.category !== selectedCat) return;
     const div = document.createElement('div');
     div.className = 'entry';
     const header = document.createElement('div');
@@ -160,7 +166,6 @@ let healthEntries = JSON.parse(localStorage.getItem('healthEntriesV2')) || [];
 function saveHealthEntries() {
   localStorage.setItem('healthEntriesV2', JSON.stringify(healthEntries));
 }
-
 function renderHealthEntries() {
   healthEntriesDiv.innerHTML = '';
   healthEntries.forEach((e, i) => {
@@ -241,8 +246,6 @@ function deleteHealthEntry(idx) {
 }
 healthForm.addEventListener('submit', addHealthEntry);
 
-// 최초 렌더링
 renderDiaryEntries();
 renderHealthEntries();
-
 
