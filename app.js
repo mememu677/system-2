@@ -1,25 +1,26 @@
-// --- 탭 전환
+// --- Main Tab switching
 const diaryTab = document.getElementById('tab-diary');
 const healthTab = document.getElementById('tab-health');
+const memoTab = document.getElementById('tab-memo');
 const diarySection = document.getElementById('diary-section');
 const healthSection = document.getElementById('health-section');
+const memoSection = document.getElementById('memo-section');
 
-diaryTab.onclick = () => {
-  diaryTab.classList.add('active');
-  healthTab.classList.remove('active');
-  diarySection.style.display = '';
-  healthSection.style.display = 'none';
-};
-healthTab.onclick = () => {
-  diaryTab.classList.remove('active');
-  healthTab.classList.add('active');
-  diarySection.style.display = 'none';
-  healthSection.style.display = '';
-};
+function showTab(tab) {
+  [diaryTab, healthTab, memoTab].forEach(t=>t.classList.remove('active'));
+  [diarySection, healthSection, memoSection].forEach(s=>s.style.display='none');
+  if(tab==='diary') {diaryTab.classList.add('active');diarySection.style.display='';}
+  if(tab==='health') {healthTab.classList.add('active');healthSection.style.display='';}
+  if(tab==='memo') {memoTab.classList.add('active');memoSection.style.display='';}
+}
+diaryTab.onclick = ()=>showTab('diary');
+healthTab.onclick = ()=>showTab('health');
+memoTab.onclick = ()=>showTab('memo');
+showTab('diary');
 
-// --- 카테고리 필터
+// --- Category Filter
 const catBtns = Array.from(document.querySelectorAll('.cat-btn'));
-let selectedCat = "전체";
+let selectedCat = "All";
 catBtns.forEach(btn => {
   btn.onclick = () => {
     catBtns.forEach(b => b.classList.remove('active'));
@@ -30,17 +31,16 @@ catBtns.forEach(btn => {
   };
 });
 
-// --- 워홀 태그 필터
-const whTags = ['전체','계획수립','진행중','완료','영어공부'];
+// --- WH Tag Filter
+const whTags = ['All','Planning','In Progress','Completed','English Study'];
 const whTagFiltersDiv = document.getElementById('wh-tag-filters');
-let selectedWhTag = "전체";
+let selectedWhTag = "All";
 function updateWhTagFilters() {
-  if (selectedCat === "호주 워홀 계획") {
+  if (selectedCat === "Working Holiday") {
     whTagFiltersDiv.style.display = "";
     whTagFiltersDiv.innerHTML = whTags.map(
-      tag => `<button class="wh-tag-btn${tag==="전체"?" active":""}" data-wh="${tag}">${tag}</button>`
+      tag => `<button class="wh-tag-btn${tag==="All"?" active":""}" data-wh="${tag}">${tag}</button>`
     ).join('');
-    // 버튼 이벤트 바인딩
     Array.from(whTagFiltersDiv.querySelectorAll('.wh-tag-btn')).forEach(btn => {
       btn.onclick = () => {
         Array.from(whTagFiltersDiv.querySelectorAll('.wh-tag-btn')).forEach(b=>b.classList.remove('active'));
@@ -49,32 +49,34 @@ function updateWhTagFilters() {
         renderDiaryEntries();
       }
     });
-    selectedWhTag = "전체";
+    selectedWhTag = "All";
   } else {
     whTagFiltersDiv.style.display = "none";
-    selectedWhTag = "전체";
+    selectedWhTag = "All";
   }
 }
 updateWhTagFilters();
 
-// --- 다이어리 기능 ---
+// --- Diary Board
 const diaryForm = document.getElementById('diary-form');
 const diaryCat = document.getElementById('diary-category');
 const diaryTitleGroup = document.getElementById('title-input-group');
 let diaryTitle = document.getElementById('diary-title');
 const diaryEntriesDiv = document.getElementById('diary-entries');
-
-let diaryEntries = JSON.parse(localStorage.getItem('diaryEntriesV2')) || [];
+let diaryEntries = JSON.parse(localStorage.getItem('diaryEntries_en')) || [];
 
 function updateTitleInput() {
-  if (diaryCat.value === "호주 워홀 계획") {
+  if (diaryCat.value === "Working Holiday") {
     diaryTitleGroup.innerHTML = `
       <select id="diary-title" required>
-        ${whTags.slice(1).map(tag=>`<option value="${tag}">${tag}</option>`).join('')}
+        <option value="Planning">Planning</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Completed">Completed</option>
+        <option value="English Study">English Study</option>
       </select>
     `;
   } else {
-    diaryTitleGroup.innerHTML = `<input type="text" id="diary-title" placeholder="제목" required />`;
+    diaryTitleGroup.innerHTML = `<input type="text" id="diary-title" placeholder="Title" required />`;
   }
   diaryTitle = document.getElementById('diary-title');
 }
@@ -82,16 +84,13 @@ diaryCat.addEventListener('change', updateTitleInput);
 updateTitleInput();
 
 function saveDiaryEntries() {
-  localStorage.setItem('diaryEntriesV2', JSON.stringify(diaryEntries));
+  localStorage.setItem('diaryEntries_en', JSON.stringify(diaryEntries));
 }
 function renderDiaryEntries() {
   diaryEntriesDiv.innerHTML = '';
   diaryEntries.forEach((e, i) => {
-    // 카테고리 필터
-    if (selectedCat !== "전체" && e.category !== selectedCat) return;
-    // 워홀 태그 필터
-    if (selectedCat === "호주 워홀 계획" && selectedWhTag !== "전체" && e.title !== selectedWhTag) return;
-
+    if (selectedCat !== "All" && e.category !== selectedCat) return;
+    if (selectedCat === "Working Holiday" && selectedWhTag !== "All" && e.title !== selectedWhTag) return;
     const div = document.createElement('div');
     div.className = 'entry';
     const header = document.createElement('div');
@@ -101,7 +100,7 @@ function renderDiaryEntries() {
     cat.className = 'entry-category';
     cat.textContent = e.category;
 
-    if (e.category === "호주 워홀 계획") {
+    if (e.category === "Working Holiday") {
       const tag = document.createElement('span');
       tag.className = 'entry-tag';
       tag.textContent = `[${e.title}]`;
@@ -117,7 +116,7 @@ function renderDiaryEntries() {
 
     const date = document.createElement('span');
     date.className = 'entry-date';
-    date.textContent = new Date(e.date).toLocaleString('ko-KR');
+    date.textContent = new Date(e.date).toLocaleString('en-US');
     header.appendChild(date);
 
     const content = document.createElement('div');
@@ -128,11 +127,11 @@ function renderDiaryEntries() {
     buttons.className = 'buttons';
     const editBtn = document.createElement('button');
     editBtn.className = 'edit';
-    editBtn.textContent = '수정';
+    editBtn.textContent = 'Edit';
     editBtn.onclick = () => editDiaryEntry(i);
     const delBtn = document.createElement('button');
     delBtn.className = 'delete';
-    delBtn.textContent = '삭제';
+    delBtn.textContent = 'Delete';
     delBtn.onclick = () => deleteDiaryEntry(i);
     buttons.appendChild(editBtn);
     buttons.appendChild(delBtn);
@@ -159,19 +158,19 @@ function addDiaryEntry(e) {
 }
 function editDiaryEntry(idx) {
   const e = diaryEntries[idx];
-  if (e.category === "호주 워홀 계획") {
-    const newTag = prompt('새 태그를 입력하세요 (계획수립/진행중/완료/영어공부)', e.title);
+  if (e.category === "Working Holiday") {
+    const newTag = prompt('New tag (Planning/In Progress/Completed/English Study):', e.title);
     if (newTag === null) return;
-    const newContent = prompt('새 내용을 입력하세요', e.content);
+    const newContent = prompt('New content:', e.content);
     if (newContent === null) return;
     diaryEntries[idx].title = newTag;
     diaryEntries[idx].content = newContent;
   } else {
-    const newTitle = prompt('새 제목을 입력하세요', e.title);
+    const newTitle = prompt('New title:', e.title);
     if (newTitle === null) return;
-    const newContent = prompt('새 내용을 입력하세요', e.content);
+    const newContent = prompt('New content:', e.content);
     if (newContent === null) return;
-    const newCategory = prompt('새 카테고리(기본/건강/일정/기록/잡담/호주 워홀 계획)', e.category);
+    const newCategory = prompt('New category (General/Health/Schedule/Record/Chat/Working Holiday):', e.category);
     if (newCategory === null) return;
     diaryEntries[idx].title = newTitle;
     diaryEntries[idx].content = newContent;
@@ -181,7 +180,7 @@ function editDiaryEntry(idx) {
   renderDiaryEntries();
 }
 function deleteDiaryEntry(idx) {
-  if (confirm('정말 삭제하시겠습니까?')) {
+  if (confirm('Delete this entry?')) {
     diaryEntries.splice(idx, 1);
     saveDiaryEntries();
     renderDiaryEntries();
@@ -189,14 +188,14 @@ function deleteDiaryEntry(idx) {
 }
 diaryForm.addEventListener('submit', addDiaryEntry);
 
-// --- 건강체크 기능 ---
+// --- Health Check Board
 const healthForm = document.getElementById('health-form');
 const healthEntriesDiv = document.getElementById('health-entries');
 const healthMemo = document.getElementById('health-memo');
-let healthEntries = JSON.parse(localStorage.getItem('healthEntriesV2')) || [];
+let healthEntries = JSON.parse(localStorage.getItem('healthEntries_en')) || [];
 
 function saveHealthEntries() {
-  localStorage.setItem('healthEntriesV2', JSON.stringify(healthEntries));
+  localStorage.setItem('healthEntries_en', JSON.stringify(healthEntries));
 }
 function renderHealthEntries() {
   healthEntriesDiv.innerHTML = '';
@@ -207,18 +206,18 @@ function renderHealthEntries() {
     header.className = 'health-header';
     const date = document.createElement('span');
     date.className = 'health-date';
-    date.textContent = new Date(e.date).toLocaleString('ko-KR');
+    date.textContent = new Date(e.date).toLocaleString('en-US');
     header.appendChild(date);
 
     const status = document.createElement('div');
     status.className = 'health-status';
     let statusArr = [];
-    if (e.sleep) statusArr.push('수면');
-    if (e.meal) statusArr.push('식사');
-    if (e.med) statusArr.push('약');
-    if (e.mood) statusArr.push('기분');
-    if (e.exercise) statusArr.push('운동');
-    status.textContent = statusArr.length ? '체크: ' + statusArr.join(', ') : '체크없음';
+    if (e.sleep) statusArr.push('Sleep');
+    if (e.meal) statusArr.push('Meal');
+    if (e.med) statusArr.push('Medication');
+    if (e.mood) statusArr.push('Mood');
+    if (e.exercise) statusArr.push('Exercise');
+    status.textContent = statusArr.length ? 'Checked: ' + statusArr.join(', ') : 'No Check';
 
     const memo = document.createElement('div');
     memo.className = 'health-memo';
@@ -228,11 +227,11 @@ function renderHealthEntries() {
     buttons.className = 'buttons';
     const editBtn = document.createElement('button');
     editBtn.className = 'edit';
-    editBtn.textContent = '수정';
+    editBtn.textContent = 'Edit';
     editBtn.onclick = () => editHealthEntry(i);
     const delBtn = document.createElement('button');
     delBtn.className = 'delete';
-    delBtn.textContent = '삭제';
+    delBtn.textContent = 'Delete';
     delBtn.onclick = () => deleteHealthEntry(i);
     buttons.appendChild(editBtn);
     buttons.appendChild(delBtn);
@@ -263,14 +262,14 @@ function addHealthEntry(e) {
 }
 function editHealthEntry(idx) {
   const e = healthEntries[idx];
-  const newMemo = prompt('새 메모를 입력하세요', e.memo || "");
+  const newMemo = prompt('New memo:', e.memo || "");
   if (newMemo === null) return;
   healthEntries[idx].memo = newMemo;
   saveHealthEntries();
   renderHealthEntries();
 }
 function deleteHealthEntry(idx) {
-  if (confirm('정말 삭제하시겠습니까?')) {
+  if (confirm('Delete this entry?')) {
     healthEntries.splice(idx, 1);
     saveHealthEntries();
     renderHealthEntries();
@@ -278,5 +277,88 @@ function deleteHealthEntry(idx) {
 }
 healthForm.addEventListener('submit', addHealthEntry);
 
+// --- Memo Board
+const memoForm = document.getElementById('memo-form');
+const memoEntriesDiv = document.getElementById('memo-entries');
+let memoEntries = JSON.parse(localStorage.getItem('memoEntries_en')) || [];
+
+function saveMemoEntries() {
+  localStorage.setItem('memoEntries_en', JSON.stringify(memoEntries));
+}
+function renderMemoEntries() {
+  memoEntriesDiv.innerHTML = '';
+  memoEntries.forEach((e, i) => {
+    const div = document.createElement('div');
+    div.className = 'memo-entry';
+    const header = document.createElement('div');
+    header.className = 'memo-header';
+
+    const title = document.createElement('span');
+    title.className = 'memo-title';
+    title.textContent = e.title;
+
+    const date = document.createElement('span');
+    date.className = 'memo-date';
+    date.textContent = new Date(e.date).toLocaleString('en-US');
+    header.appendChild(title);
+    header.appendChild(date);
+
+    const content = document.createElement('div');
+    content.className = 'memo-content';
+    content.textContent = e.content;
+
+    const buttons = document.createElement('div');
+    buttons.className = 'buttons';
+    const editBtn = document.createElement('button');
+    editBtn.className = 'edit';
+    editBtn.textContent = 'Edit';
+    editBtn.onclick = () => editMemoEntry(i);
+    const delBtn = document.createElement('button');
+    delBtn.className = 'delete';
+    delBtn.textContent = 'Delete';
+    delBtn.onclick = () => deleteMemoEntry(i);
+    buttons.appendChild(editBtn);
+    buttons.appendChild(delBtn);
+
+    div.appendChild(header);
+    div.appendChild(content);
+    div.appendChild(buttons);
+
+    memoEntriesDiv.appendChild(div);
+  });
+}
+function addMemoEntry(e) {
+  e.preventDefault();
+  memoEntries.unshift({
+    title: document.getElementById('memo-title').value,
+    content: document.getElementById('memo-content').value,
+    date: new Date()
+  });
+  saveMemoEntries();
+  renderMemoEntries();
+  memoForm.reset();
+}
+function editMemoEntry(idx) {
+  const e = memoEntries[idx];
+  const newTitle = prompt('New title:', e.title);
+  if (newTitle === null) return;
+  const newContent = prompt('New memo:', e.content);
+  if (newContent === null) return;
+  memoEntries[idx].title = newTitle;
+  memoEntries[idx].content = newContent;
+  saveMemoEntries();
+  renderMemoEntries();
+}
+function deleteMemoEntry(idx) {
+  if (confirm('Delete this memo?')) {
+    memoEntries.splice(idx, 1);
+    saveMemoEntries();
+    renderMemoEntries();
+  }
+}
+memoForm.addEventListener('submit', addMemoEntry);
+
+// --- First render
 renderDiaryEntries();
 renderHealthEntries();
+renderMemoEntries();
