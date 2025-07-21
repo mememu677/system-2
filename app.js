@@ -25,9 +25,37 @@ catBtns.forEach(btn => {
     catBtns.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     selectedCat = btn.dataset.cat;
+    updateWhTagFilters();
     renderDiaryEntries();
   };
 });
+
+// --- 워홀 태그 필터
+const whTags = ['전체','계획수립','진행중','완료','영어공부'];
+const whTagFiltersDiv = document.getElementById('wh-tag-filters');
+let selectedWhTag = "전체";
+function updateWhTagFilters() {
+  if (selectedCat === "호주 워홀 계획") {
+    whTagFiltersDiv.style.display = "";
+    whTagFiltersDiv.innerHTML = whTags.map(
+      tag => `<button class="wh-tag-btn${tag==="전체"?" active":""}" data-wh="${tag}">${tag}</button>`
+    ).join('');
+    // 버튼 이벤트 바인딩
+    Array.from(whTagFiltersDiv.querySelectorAll('.wh-tag-btn')).forEach(btn => {
+      btn.onclick = () => {
+        Array.from(whTagFiltersDiv.querySelectorAll('.wh-tag-btn')).forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedWhTag = btn.dataset.wh;
+        renderDiaryEntries();
+      }
+    });
+    selectedWhTag = "전체";
+  } else {
+    whTagFiltersDiv.style.display = "none";
+    selectedWhTag = "전체";
+  }
+}
+updateWhTagFilters();
 
 // --- 다이어리 기능 ---
 const diaryForm = document.getElementById('diary-form');
@@ -35,14 +63,14 @@ const diaryCat = document.getElementById('diary-category');
 const diaryTitleGroup = document.getElementById('title-input-group');
 let diaryTitle = document.getElementById('diary-title');
 const diaryEntriesDiv = document.getElementById('diary-entries');
-const whTags = ['계획수립','진행중','완료','영어공부'];
+
 let diaryEntries = JSON.parse(localStorage.getItem('diaryEntriesV2')) || [];
 
 function updateTitleInput() {
   if (diaryCat.value === "호주 워홀 계획") {
     diaryTitleGroup.innerHTML = `
       <select id="diary-title" required>
-        ${whTags.map(tag=>`<option value="${tag}">${tag}</option>`).join('')}
+        ${whTags.slice(1).map(tag=>`<option value="${tag}">${tag}</option>`).join('')}
       </select>
     `;
   } else {
@@ -59,7 +87,11 @@ function saveDiaryEntries() {
 function renderDiaryEntries() {
   diaryEntriesDiv.innerHTML = '';
   diaryEntries.forEach((e, i) => {
+    // 카테고리 필터
     if (selectedCat !== "전체" && e.category !== selectedCat) return;
+    // 워홀 태그 필터
+    if (selectedCat === "호주 워홀 계획" && selectedWhTag !== "전체" && e.title !== selectedWhTag) return;
+
     const div = document.createElement('div');
     div.className = 'entry';
     const header = document.createElement('div');
@@ -248,4 +280,3 @@ healthForm.addEventListener('submit', addHealthEntry);
 
 renderDiaryEntries();
 renderHealthEntries();
-
