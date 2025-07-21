@@ -14,13 +14,25 @@ header {
   text-align: center;
   margin-bottom: 1rem;
 }
+#category-filter {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+#category-select, #entry-category {
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
 form {
   display: flex;
   flex-direction: column;
   margin-bottom: 1rem;
 }
 form input,
-form textarea {
+form textarea,
+form select {
   padding: 0.5rem;
   margin-bottom: 0.5rem;
   font-size: 1rem;
@@ -47,9 +59,18 @@ form button {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 0.5rem;
 }
 .entry-title {
   font-weight: bold;
+}
+.entry-category {
+  font-size: 0.95em;
+  background: #e0e0e0;
+  color: #333;
+  border-radius: 2em;
+  padding: 0.1em 0.8em;
+  margin-right: 0.5em;
 }
 .entry-date {
   font-size: 0.85rem;
@@ -79,7 +100,24 @@ form button {
   background: #F44336;
   color: #fff;
 }
-
+#health-check {
+  background: #e3f8fa;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+#health-check h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1em;
+}
+#health-form label {
+  margin-right: 1em;
+}
+#last-health {
+  font-size: 0.9em;
+  margin-top: 0.5em;
+  color: #017e6b;
+}
 @media (max-width: 600px) {
   .container { padding: 0.5rem; }
 }
