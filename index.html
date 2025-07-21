@@ -3,57 +3,53 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>시스템 다이어리</title>
+  <title>시스템 다이어리 & 건강체크</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
     <header>
       <h1>시스템 다이어리</h1>
+      <nav>
+        <button id="tab-diary" class="tab active">다이어리</button>
+        <button id="tab-health" class="tab">건강체크</button>
+      </nav>
     </header>
-    
-    <!-- 건강체크란 -->
-    <section id="health-check">
-      <h2>건강 체크</h2>
-      <form id="health-form">
-        <label><input type="checkbox" name="sleep" /> 수면</label>
-        <label><input type="checkbox" name="meal" /> 식사</label>
-        <label><input type="checkbox" name="med" /> 약 복용</label>
-        <label><input type="checkbox" name="mood" /> 기분 기록</label>
-        <label><input type="checkbox" name="exercise" /> 운동</label>
-        <button type="submit">오늘 건강기록</button>
+
+    <!-- 다이어리 게시판 -->
+    <section id="diary-section">
+      <form id="diary-form">
+        <select id="diary-category" required>
+          <option value="기본">기본</option>
+          <option value="건강">건강</option>
+          <option value="일정">일정</option>
+          <option value="기록">기록</option>
+          <option value="잡담">잡담</option>
+        </select>
+        <input type="text" id="diary-title" placeholder="제목" required />
+        <textarea id="diary-content" placeholder="내용" required></textarea>
+        <button type="submit">작성</button>
       </form>
-      <div id="last-health"></div>
+      <div id="diary-entries"></div>
     </section>
 
-    <!-- 카테고리 필터 -->
-    <div id="category-filter">
-      <label>카테고리:</label>
-      <select id="category-select">
-        <option value="전체">전체</option>
-        <option value="기본">기본</option>
-        <option value="건강">건강</option>
-        <option value="일정">일정</option>
-        <option value="기록">기록</option>
-        <option value="잡담">잡담</option>
-      </select>
-    </div>
-
-    <form id="entry-form">
-      <select id="entry-category" required>
-        <option value="기본">기본</option>
-        <option value="건강">건강</option>
-        <option value="일정">일정</option>
-        <option value="기록">기록</option>
-        <option value="잡담">잡담</option>
-      </select>
-      <input type="text" id="entry-title" placeholder="제목" required />
-      <textarea id="entry-content" placeholder="내용" required></textarea>
-      <button type="submit">작성</button>
-    </form>
-
-    <div id="entries"></div>
+    <!-- 건강체크 게시판 -->
+    <section id="health-section" style="display:none;">
+      <form id="health-form">
+        <div class="health-row">
+          <label><input type="checkbox" name="sleep" /> 수면</label>
+          <label><input type="checkbox" name="meal" /> 식사</label>
+          <label><input type="checkbox" name="med" /> 약</label>
+          <label><input type="checkbox" name="mood" /> 기분</label>
+          <label><input type="checkbox" name="exercise" /> 운동</label>
+        </div>
+        <textarea id="health-memo" placeholder="메모(선택)" rows="2"></textarea>
+        <button type="submit">기록</button>
+      </form>
+      <div id="health-entries"></div>
+    </section>
   </div>
   <script src="app.js"></script>
 </body>
 </html>
+
