@@ -66,7 +66,7 @@
 
     <!-- Working Holiday Section -->
     <section id="wh-section" style="display:none;">
-      <div id="wh-tag-filters" class="sub-filters"></div>
+      <div id="wh-tag-filters"></div>
       <form id="wh-form">
         <select id="wh-title" required>
           <option value="Planning">Planning</option>
@@ -82,10 +82,12 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // Show one section at a time
       function showSection(id) {
         document.querySelectorAll('section').forEach(sec => sec.style.display = 'none');
         document.getElementById(id).style.display = '';
       }
+      // Tab click
       document.querySelectorAll('.tab').forEach(tab => {
         tab.addEventListener('click', () => {
           document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -94,53 +96,55 @@
         });
       });
 
-      // Category buttons
-      const categories = ['All','General','Health','Schedule','Record','Chat'];
-      const catFilterDiv = document.getElementById('category-filters');
-      categories.forEach(cat => {
+      // Diary category filters
+      const diaryCats = ['All','General','Health','Schedule','Record','Chat'];
+      const catDiv = document.getElementById('category-filters');
+      diaryCats.forEach(cat => {
         const btn = document.createElement('button');
         btn.className = 'cat-btn';
         btn.innerText = cat;
         btn.addEventListener('click', () => {
           document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
-          btn.classList.add('active');
-          renderDiary();
+          btn.classList.add('active'); renderDiary();
         });
-        catFilterDiv.appendChild(btn);
+        catDiv.appendChild(btn);
       });
       document.querySelector('.cat-btn').classList.add('active');
 
-      // Diary
+      // Diary entries
       let diaryEntries = JSON.parse(localStorage.getItem('diaryEntries') || '[]');
       const diaryForm = document.getElementById('diary-form');
-      const diaryEntriesDiv = document.getElementById('diary-entries');
+      const diaryDiv = document.getElementById('diary-entries');
       function renderDiary() {
-        const activeCat = document.querySelector('.cat-btn.active').innerText;
-        const entries = diaryEntries.filter(e=> activeCat==='All'||e.category===activeCat);
-        diaryEntriesDiv.innerHTML = [...entries].reverse().map(e => `
+        const active = document.querySelector('.cat-btn.active').innerText;
+        const filtered = diaryEntries.filter(e => active==='All' || e.category===active);
+        diaryDiv.innerHTML = [...filtered].reverse().map(e => `
           <div class="entry">
-            <h3>[${e.category}] ${e.title}</h3>
-            <p>${e.content}</p>
+            <div class="entry-header">
+              <span class="entry-date">${e.date}</span>
+              <span class="entry-title">[${e.category}] ${e.title}</span>
+            </div>
+            <div class="entry-content">${e.content}</div>
           </div>`).join('');
       }
       renderDiary();
       diaryForm.addEventListener('submit', e => {
         e.preventDefault();
+        const date = new Date().toLocaleString();
         const title = document.getElementById('diary-title').value;
         const category = document.getElementById('diary-category').value;
         const content = document.getElementById('diary-content').value;
-        diaryEntries.push({ title, category, content });
+        diaryEntries.push({ date, title, category, content });
         localStorage.setItem('diaryEntries', JSON.stringify(diaryEntries));
-        renderDiary();
-        diaryForm.reset();
+        renderDiary(); diaryForm.reset();
       });
 
-      // Health
+      // Health entries (already includes date ordering)
       let healthEntries = JSON.parse(localStorage.getItem('healthEntries') || '[]');
       const healthForm = document.getElementById('health-form');
-      const healthEntriesDiv = document.getElementById('health-entries');
+      const healthDiv = document.getElementById('health-entries');
       function renderHealth() {
-        healthEntriesDiv.innerHTML = [...healthEntries].reverse().map(e => `
+        healthDiv.innerHTML = [...healthEntries].reverse().map(e => `
           <div class="entry">
             <p><strong>${e.date}</strong><br>
             Sleep: ${e.sleep}, Meal: ${e.meal}, Med: ${e.med}, Mood: ${e.mood}, Exercise: ${e.exercise}<br>
@@ -150,57 +154,78 @@
       renderHealth();
       healthForm.addEventListener('submit', e => {
         e.preventDefault();
+        const date = new Date().toLocaleString();
         const { sleep, meal, med, mood, exercise } = healthForm;
         const memo = document.getElementById('health-memo').value;
-        const date = new Date().toLocaleString();
         healthEntries.push({ date, sleep: sleep.checked, meal: meal.checked, med: med.checked, mood: mood.checked, exercise: exercise.checked, memo });
         localStorage.setItem('healthEntries', JSON.stringify(healthEntries));
-        renderHealth();
-        healthForm.reset();
+        renderHealth(); healthForm.reset();
       });
 
-      // Memo
+      // Memo entries
       let memoEntries = JSON.parse(localStorage.getItem('memoEntries') || '[]');
       const memoForm = document.getElementById('memo-form');
-      const memoEntriesDiv = document.getElementById('memo-entries');
+      const memoDiv = document.getElementById('memo-entries');
       function renderMemo() {
-        memoEntriesDiv.innerHTML = [...memoEntries].reverse().map(e => `
+        memoDiv.innerHTML = [...memoEntries].reverse().map(e => `
           <div class="entry">
-            <h3>${e.title}</h3>
-            <p>${e.content}</p>
+            <div class="memo-header">
+              <span class="memo-date">${e.date}</span>
+              <span class="memo-title">${e.title}</span>
+            </div>
+            <div class="memo-content">${e.content}</div>
           </div>`).join('');
       }
       renderMemo();
       memoForm.addEventListener('submit', e => {
         e.preventDefault();
+        const date = new Date().toLocaleString();
         const title = document.getElementById('memo-title').value;
         const content = document.getElementById('memo-content').value;
-        memoEntries.push({ title, content });
+        memoEntries.push({ date, title, content });
         localStorage.setItem('memoEntries', JSON.stringify(memoEntries));
-        renderMemo();
-        memoForm.reset();
+        renderMemo(); memoForm.reset();
       });
 
-      // Working Holiday
+      // Working Holiday filters
+      const whCats = ['All','Planning','In Progress','Completed','English Study'];
+      const whFilterDiv = document.getElementById('wh-tag-filters');
+      whCats.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.className = 'wh-tag-btn'; btn.innerText = cat;
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.wh-tag-btn').forEach(b=>b.classList.remove('active'));
+          btn.classList.add('active'); renderWH();
+        });
+        whFilterDiv.appendChild(btn);
+      });
+      document.querySelector('.wh-tag-btn').classList.add('active');
+
+      // Working Holiday entries
       let whEntries = JSON.parse(localStorage.getItem('whEntries') || '[]');
       const whForm = document.getElementById('wh-form');
-      const whEntriesDiv = document.getElementById('wh-entries');
+      const whDiv = document.getElementById('wh-entries');
       function renderWH() {
-        whEntriesDiv.innerHTML = [...whEntries].reverse().map(e => `
+        const active = document.querySelector('.wh-tag-btn.active').innerText;
+        const filtered = whEntries.filter(e => active==='All' || e.title===active);
+        whDiv.innerHTML = [...filtered].reverse().map(e => `
           <div class="entry">
-            <h3>[${e.title}]</h3>
-            <p>${e.content}</p>
+            <div class="wh-header">
+              <span class="wh-date">${e.date}</span>
+              <span class="wh-tag">${e.title}</span>
+            </div>
+            <div class="wh-content">${e.content}</div>
           </div>`).join('');
       }
       renderWH();
       whForm.addEventListener('submit', e => {
         e.preventDefault();
+        const date = new Date().toLocaleString();
         const title = document.getElementById('wh-title').value;
         const content = document.getElementById('wh-content').value;
-        whEntries.push({ title, content });
+        whEntries.push({ date, title, content });
         localStorage.setItem('whEntries', JSON.stringify(whEntries));
-        renderWH();
-        whForm.reset();
+        renderWH(); whForm.reset();
       });
     });
     </script>
