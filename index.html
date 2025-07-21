@@ -22,15 +22,7 @@
 
     <!-- Diary Section -->
     <section id="diary-section">
-      <!-- Category filters (for diary) -->
-      <div id="category-filters">
-        <button data-cat="All" class="cat-btn active">All</button>
-        <button data-cat="General" class="cat-btn">General</button>
-        <button data-cat="Health" class="cat-btn">Health</button>
-        <button data-cat="Schedule" class="cat-btn">Schedule</button>
-        <button data-cat="Record" class="cat-btn">Record</button>
-        <button data-cat="Chat" class="cat-btn">Chat</button>
-      </div>
+      <div id="category-filters"></div>
       <form id="diary-form">
         <input type="text" id="diary-title" placeholder="Title" required />
         <select id="diary-category" required>
@@ -74,14 +66,7 @@
 
     <!-- Working Holiday Section -->
     <section id="wh-section" style="display:none;">
-      <!-- Sub-category filters for Working Holiday -->
-      <div id="wh-tag-filters" class="sub-filters">
-        <button data-wh="All" class="wh-tag-btn active">All</button>
-        <button data-wh="Planning" class="wh-tag-btn">Planning</button>
-        <button data-wh="In Progress" class="wh-tag-btn">In Progress</button>
-        <button data-wh="Completed" class="wh-tag-btn">Completed</button>
-        <button data-wh="English Study" class="wh-tag-btn">English Study</button>
-      </div>
+      <div id="wh-tag-filters" class="sub-filters"></div>
       <form id="wh-form">
         <select id="wh-title" required>
           <option value="Planning">Planning</option>
@@ -96,113 +81,129 @@
     </section>
 
     <script>
-document.addEventListener('DOMContentLoaded', () => {
-  // Utility to show a section and hide others
-  function showSection(id) {
-    document.querySelectorAll('section').forEach(sec => sec.style.display = 'none');
-    document.getElementById(id).style.display = '';
-  }
-  // Tab switching
-  document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      showSection(tab.id.replace('tab-', '') + '-section');
+    document.addEventListener('DOMContentLoaded', () => {
+      function showSection(id) {
+        document.querySelectorAll('section').forEach(sec => sec.style.display = 'none');
+        document.getElementById(id).style.display = '';
+      }
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          showSection(tab.id.replace('tab-', '') + '-section');
+        });
+      });
+
+      // Category buttons
+      const categories = ['All','General','Health','Schedule','Record','Chat'];
+      const catFilterDiv = document.getElementById('category-filters');
+      categories.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.className = 'cat-btn';
+        btn.innerText = cat;
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+          btn.classList.add('active');
+          renderDiary();
+        });
+        catFilterDiv.appendChild(btn);
+      });
+      document.querySelector('.cat-btn').classList.add('active');
+
+      // Diary
+      let diaryEntries = JSON.parse(localStorage.getItem('diaryEntries') || '[]');
+      const diaryForm = document.getElementById('diary-form');
+      const diaryEntriesDiv = document.getElementById('diary-entries');
+      function renderDiary() {
+        const activeCat = document.querySelector('.cat-btn.active').innerText;
+        const entries = diaryEntries.filter(e=> activeCat==='All'||e.category===activeCat);
+        diaryEntriesDiv.innerHTML = [...entries].reverse().map(e => `
+          <div class="entry">
+            <h3>[${e.category}] ${e.title}</h3>
+            <p>${e.content}</p>
+          </div>`).join('');
+      }
+      renderDiary();
+      diaryForm.addEventListener('submit', e => {
+        e.preventDefault();
+        const title = document.getElementById('diary-title').value;
+        const category = document.getElementById('diary-category').value;
+        const content = document.getElementById('diary-content').value;
+        diaryEntries.push({ title, category, content });
+        localStorage.setItem('diaryEntries', JSON.stringify(diaryEntries));
+        renderDiary();
+        diaryForm.reset();
+      });
+
+      // Health
+      let healthEntries = JSON.parse(localStorage.getItem('healthEntries') || '[]');
+      const healthForm = document.getElementById('health-form');
+      const healthEntriesDiv = document.getElementById('health-entries');
+      function renderHealth() {
+        healthEntriesDiv.innerHTML = [...healthEntries].reverse().map(e => `
+          <div class="entry">
+            <p><strong>${e.date}</strong><br>
+            Sleep: ${e.sleep}, Meal: ${e.meal}, Med: ${e.med}, Mood: ${e.mood}, Exercise: ${e.exercise}<br>
+            Memo: ${e.memo}</p>
+          </div>`).join('');
+      }
+      renderHealth();
+      healthForm.addEventListener('submit', e => {
+        e.preventDefault();
+        const { sleep, meal, med, mood, exercise } = healthForm;
+        const memo = document.getElementById('health-memo').value;
+        const date = new Date().toLocaleString();
+        healthEntries.push({ date, sleep: sleep.checked, meal: meal.checked, med: med.checked, mood: mood.checked, exercise: exercise.checked, memo });
+        localStorage.setItem('healthEntries', JSON.stringify(healthEntries));
+        renderHealth();
+        healthForm.reset();
+      });
+
+      // Memo
+      let memoEntries = JSON.parse(localStorage.getItem('memoEntries') || '[]');
+      const memoForm = document.getElementById('memo-form');
+      const memoEntriesDiv = document.getElementById('memo-entries');
+      function renderMemo() {
+        memoEntriesDiv.innerHTML = [...memoEntries].reverse().map(e => `
+          <div class="entry">
+            <h3>${e.title}</h3>
+            <p>${e.content}</p>
+          </div>`).join('');
+      }
+      renderMemo();
+      memoForm.addEventListener('submit', e => {
+        e.preventDefault();
+        const title = document.getElementById('memo-title').value;
+        const content = document.getElementById('memo-content').value;
+        memoEntries.push({ title, content });
+        localStorage.setItem('memoEntries', JSON.stringify(memoEntries));
+        renderMemo();
+        memoForm.reset();
+      });
+
+      // Working Holiday
+      let whEntries = JSON.parse(localStorage.getItem('whEntries') || '[]');
+      const whForm = document.getElementById('wh-form');
+      const whEntriesDiv = document.getElementById('wh-entries');
+      function renderWH() {
+        whEntriesDiv.innerHTML = [...whEntries].reverse().map(e => `
+          <div class="entry">
+            <h3>[${e.title}]</h3>
+            <p>${e.content}</p>
+          </div>`).join('');
+      }
+      renderWH();
+      whForm.addEventListener('submit', e => {
+        e.preventDefault();
+        const title = document.getElementById('wh-title').value;
+        const content = document.getElementById('wh-content').value;
+        whEntries.push({ title, content });
+        localStorage.setItem('whEntries', JSON.stringify(whEntries));
+        renderWH();
+        whForm.reset();
+      });
     });
-  });
-
-  // Diary
-  let diaryEntries = JSON.parse(localStorage.getItem('diaryEntries') || '[]');
-  const diaryForm = document.getElementById('diary-form');
-  const diaryEntriesDiv = document.getElementById('diary-entries');
-  function renderDiary() {
-    diaryEntriesDiv.innerHTML = diaryEntries.map(e => `
-      <div class="entry">
-        <h3>[${e.category}] ${e.title}</h3>
-        <p>${e.content}</p>
-      </div>`).join('');
-  }
-  renderDiary();
-  diaryForm.addEventListener('submit', e => {
-    e.preventDefault();
-    const title = document.getElementById('diary-title').value;
-    const category = document.getElementById('diary-category').value;
-    const content = document.getElementById('diary-content').value;
-    diaryEntries.push({ title, category, content });
-    localStorage.setItem('diaryEntries', JSON.stringify(diaryEntries));
-    renderDiary();
-    diaryForm.reset();
-  });
-
-  // Health
-  let healthEntries = JSON.parse(localStorage.getItem('healthEntries') || '[]');
-  const healthForm = document.getElementById('health-form');
-  const healthEntriesDiv = document.getElementById('health-entries');
-  function renderHealth() {
-    healthEntriesDiv.innerHTML = healthEntries.map(e => `
-      <div class="entry">
-        <p><strong>${e.date}</strong><br>
-        Sleep: ${e.sleep}, Meal: ${e.meal}, Med: ${e.med}, Mood: ${e.mood}, Exercise: ${e.exercise}<br>
-        Memo: ${e.memo}</p>
-      </div>`).join('');
-  }
-  renderHealth();
-  healthForm.addEventListener('submit', e => {
-    e.preventDefault();
-    const { sleep, meal, med, mood, exercise } = healthForm;
-    const memo = document.getElementById('health-memo').value;
-    const date = new Date().toLocaleString();
-    healthEntries.push({ date, sleep: sleep.checked, meal: meal.checked, med: med.checked, mood: mood.checked, exercise: exercise.checked, memo });
-    localStorage.setItem('healthEntries', JSON.stringify(healthEntries));
-    renderHealth();
-    healthForm.reset();
-  });
-
-  // Memo
-  let memoEntries = JSON.parse(localStorage.getItem('memoEntries') || '[]');
-  const memoForm = document.getElementById('memo-form');
-  const memoEntriesDiv = document.getElementById('memo-entries');
-  function renderMemo() {
-    memoEntriesDiv.innerHTML = memoEntries.map(e => `
-      <div class="entry">
-        <h3>${e.title}</h3>
-        <p>${e.content}</p>
-      </div>`).join('');
-  }
-  renderMemo();
-  memoForm.addEventListener('submit', e => {
-    e.preventDefault();
-    const title = document.getElementById('memo-title').value;
-    const content = document.getElementById('memo-content').value;
-    memoEntries.push({ title, content });
-    localStorage.setItem('memoEntries', JSON.stringify(memoEntries));
-    renderMemo();
-    memoForm.reset();
-  });
-
-  // Working Holiday
-  let whEntries = JSON.parse(localStorage.getItem('whEntries') || '[]');
-  const whForm = document.getElementById('wh-form');
-  const whEntriesDiv = document.getElementById('wh-entries');
-  function renderWH() {
-    whEntriesDiv.innerHTML = whEntries.map(e => `
-      <div class="entry">
-        <h3>[${e.title}]</h3>
-        <p>${e.content}</p>
-      </div>`).join('');
-  }
-  renderWH();
-  whForm.addEventListener('submit', e => {
-    e.preventDefault();
-    const title = document.getElementById('wh-title').value;
-    const content = document.getElementById('wh-content').value;
-    whEntries.push({ title, content });
-    localStorage.setItem('whEntries', JSON.stringify(whEntries));
-    renderWH();
-    whForm.reset();
-  });
-});
-</script>
+    </script>
   </div>
 </body>
 </html>
