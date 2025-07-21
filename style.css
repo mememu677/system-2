@@ -1,137 +1,137 @@
-@import url('https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@700&family=UnifrakturCook:wght@700&family=Creepster&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@700&family=Montserrat:wght@700&family=Nanum+Myeongjo:wght@700&display=swap');
 
 body {
-  background: #121111;
-  color: #fff8ec;
-  font-family: 'Grenze Gotisch', 'UnifrakturCook', 'Creepster', Arial, sans-serif;
+  background: #111;
+  color: #fff;
+  font-family: 'Nanum Myeongjo', 'Grenze Gotisch', 'Montserrat', 'Noto Serif KR', 'Roboto Mono', serif;
   margin: 0;
 }
 
+/* 레이아웃 박스 */
 .container {
   width: 100vw;
   min-height: 100vh;
-  max-width: 560px;
+  max-width: 650px;
   margin: 0 auto;
-  padding: 36px 0 28px 0;
+  padding: 32px 0 24px 0;
   box-sizing: border-box;
-  border-radius: 16px;
-  background: rgba(16,13,9,0.92);
-  box-shadow: 0 0 48px #2c1f15cc, 0 0 0 3.5px #b99d4860;
-  border: 3px solid #b99d4890;
 }
 
 /* 헤더 타이틀 */
 h1 {
-  font-family: 'Grenze Gotisch', 'UnifrakturCook', 'Creepster', serif;
-  font-size: 2.5rem;
-  color: #ffe17a;
-  letter-spacing: 0.16em;
-  margin-bottom: 28px;
+  font-family: 'Grenze Gotisch', 'Montserrat', serif;
+  font-size: 2.6rem;
+  margin-bottom: 24px;
+  color: #fff;
+  letter-spacing: 0.14em;
   text-align: center;
-  text-shadow: 0 2px 22px #b99d48cc, 0 2px 14px #000c;
-  border-bottom: 1.7px solid #b99d48bb;
-  padding-bottom: 0.4em;
+  font-weight: 700;
+  text-shadow: 0 2px 20px #000a;
+  border-bottom: 2px solid #fff2;
+  padding-bottom: 0.25em;
 }
 
 /* 네비게이션(탭) */
 nav {
   display: flex;
-  overflow-x: auto;
-  gap: 0.16em;
-  padding: 0 2vw 0.8rem 2vw;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  justify-content: center;
   flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25em;
+  margin-bottom: 1.3em;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
 nav::-webkit-scrollbar { display: none; }
 .tab {
-  font-family: 'Grenze Gotisch', 'Creepster', serif;
-  font-size: 1.07rem;
-  min-width: 95px;
-  max-width: 43vw;
-  padding: 0.46rem 1.18rem;
-  background: #181417;
-  color: #ffe17a;
+  font-family: 'Grenze Gotisch', 'Montserrat', serif;
+  font-size: 1.16rem;          /* 글씨 더 큼! */
+  min-width: 105px;
+  max-width: 48vw;
+  padding: 0.55rem 1.4rem;
+  background: #18181b;
+  color: #fff;
   border: none;
-  border-radius: 1.3em 1.3em 0 0;
-  margin-bottom: 0.15em;
+  border-radius: 1.2em 1.2em 0 0;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.11em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  letter-spacing: 0.07em;
-  font-variant-caps: all-small-caps;
-  font-weight: 700;
   border-bottom: 3.5px solid transparent;
-  transition: background 0.2s, color 0.2s, border 0.2s;
+  transition: background 0.18s, color 0.18s, border 0.18s;
 }
 .tab.active {
-  background: #ffe17a;
-  color: #121111;
+  background: #fff;
+  color: #18181b;
+  border-bottom: 3.5px solid #fff;
   font-weight: bold;
-  border-bottom: 3.5px solid #b99d48;
-  box-shadow: 0 2px 8px #b99d4840;
 }
 
-/* 게시판 공통 */
+/* 게시판(섹션)도 가변폭 */
 section {
   width: 100vw;
-  max-width: 560px;
+  max-width: 650px;
   margin: 0 auto;
   padding: 0 2vw 2vw 2vw;
   box-sizing: border-box;
 }
 
+/* 폼 입력 (한글 세리프+영문) */
 form {
   display: flex;
   flex-direction: column;
-  gap: 0.58rem;
+  gap: 0.5rem;
   margin-bottom: 1.2rem;
 }
 form input,
 form textarea,
 form select {
-  font-family: 'Grenze Gotisch', 'UnifrakturCook', 'Creepster', Arial, sans-serif;
+  font-family: 'Nanum Myeongjo', 'Grenze Gotisch', 'Montserrat', 'Noto Serif KR', serif;
   width: 100%;
-  font-size: 1.12rem;
-  padding: 0.48rem;
-  border: 1.4px solid #b99d48a0;
-  border-radius: 8px;
-  background: #181315;
-  color: #ffe17a;
+  font-size: 1.08rem;
+  padding: 0.57rem;
+  border: 1.7px solid #fff7;
+  border-radius: 7px;
+  background: #18181b;
+  color: #fff;
   box-sizing: border-box;
+  transition: border 0.16s;
 }
 form input:focus, form textarea:focus, form select:focus {
-  border: 2px solid #ffe17a;
+  border: 2.5px solid #fff;
   outline: none;
-}
-form button {
-  font-family: 'UnifrakturCook', 'Grenze Gotisch', serif;
-  font-size: 1.14rem;
-  padding: 0.66rem;
-  border: none;
-  border-radius: 8px;
-  background: #ffe17a;
-  color: #181315;
-  font-weight: 700;
-  letter-spacing: 0.13em;
-  box-shadow: 0 1.5px 8px #b99d4855;
-  margin-top: 0.12em;
-  transition: background 0.14s, color 0.14s;
-}
-form button:hover {
-  background: #b99d48;
+  background: #232325;
   color: #fff;
 }
+form button {
+  font-family: 'Grenze Gotisch', 'Montserrat', serif;
+  font-size: 1.19rem;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 7px;
+  background: #fff;
+  color: #111;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  margin-top: 0.09em;
+  transition: background 0.13s, color 0.13s;
+}
+form button:hover {
+  background: #18181b;
+  color: #fff;
+  border: 2.5px solid #fff;
+}
 
+/* 게시물 카드 */
 .entry, .health-entry, .memo-entry, .wh-entry {
-  background: #181417cc;
-  padding: 1.05rem;
-  margin-bottom: 1.16rem;
-  border-radius: 10px;
-  box-shadow: 0 2px 14px #000b, 0 1px 0 #b99d4840;
-  font-family: 'Roboto Mono', monospace;
-  border: 1.8px solid #b99d4877;
+  background: #16161a;
+  padding: 1.12rem;
+  margin-bottom: 1.19rem;
+  border-radius: 9px;
+  box-shadow: 0 2px 16px #000a;
+  font-family: 'Nanum Myeongjo', 'Montserrat', serif;
+  border: 1.8px solid #fff3;
   word-break: break-word;
 }
 
@@ -139,54 +139,58 @@ form button:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 0.56rem;
-  font-family: 'Roboto Mono', monospace;
+  gap: 0.5rem;
+  font-family: 'Montserrat', 'Roboto Mono', sans-serif;
   font-size: 1em;
 }
-.entry-title, .wh-tag, .memo-title { font-weight: bold; color: #ffe17a; }
+.entry-title, .wh-tag, .memo-title { font-weight: bold; }
 .entry-date, .health-date, .memo-date, .wh-date {
   font-size: 0.98rem;
-  color: #b99d48;
+  color: #fff9;
 }
 .entry-content, .health-memo, .memo-content, .wh-content {
-  margin-top: 0.47rem;
-  color: #fffbe7;
+  margin-top: 0.5rem;
+  color: #fff;
   white-space: pre-wrap;
-  font-size: 1.05em;
+  font-size: 1.07em;
+  font-family: 'Nanum Myeongjo', 'Montserrat', serif;
 }
 
+/* 버튼 묶음 */
 .buttons {
   display: flex;
   gap: 0.6rem;
-  margin-top: 0.45rem;
+  margin-top: 0.49rem;
 }
 .buttons button {
-  font-family: 'Roboto Mono', monospace;
-  padding: 0.29rem 0.8rem;
-  font-size: 0.96em;
+  font-family: 'Montserrat', sans-serif;
+  padding: 0.29rem 0.88rem;
+  font-size: 0.98em;
   border-radius: 5px;
-  border: none;
-  background: #ffe17a;
-  color: #181315;
-  font-weight: bold;
+  border: 2px solid #fff;
+  background: #18181b;
+  color: #fff;
   cursor: pointer;
-  transition: background 0.16s, color 0.16s;
+  font-weight: 700;
+  transition: background 0.17s, color 0.17s;
 }
-.buttons .edit { background: #fffbe7; color: #b99d48; }
-.buttons .delete { background: #b99d48; color: #fffbe7; }
+.buttons button:hover {
+  background: #fff;
+  color: #111;
+}
 
+/* 기타 */
 .health-row {
   display: flex;
   flex-wrap: wrap;
   gap: 1em;
-  margin-bottom: 0.5em;
+  margin-bottom: 0.7em;
 }
 .health-status {
   font-size: 1.02em;
   margin-top: 0.38em;
-  color: #ffe17a;
+  color: #fff;
 }
-
 #wh-tag-filters {
   display: flex;
   flex-wrap: wrap;
@@ -195,39 +199,38 @@ form button:hover {
   margin-bottom: 1em;
 }
 .wh-tag-btn {
-  font-family: 'Roboto Mono', monospace;
-  background: #ffe17a;
-  color: #181315;
-  border: none;
+  font-family: 'Montserrat', sans-serif;
+  background: #fff;
+  color: #18181b;
+  border: 2px solid #fff;
   border-radius: 2em;
-  padding: 0.21em 1em;
+  padding: 0.23em 1em;
   margin-right: 0.13em;
   cursor: pointer;
-  font-size: 0.98em;
+  font-size: 1.06em;
   transition: background 0.19s, color 0.19s;
 }
 .wh-tag-btn.active {
-  background: #b99d48;
-  color: #fffbe7;
+  background: #18181b;
+  color: #fff;
 }
 
-/* --- 반응형 --- */
 @media (max-width: 900px) {
-  .container, section { max-width: 98vw; }
+  .container, section { max-width: 99vw; }
 }
 @media (max-width: 600px) {
   .container, section {
     padding: 0 1vw 2vw 1vw;
     max-width: 100vw;
-    border-radius: 0;
   }
-  h1 { font-size: 1.25rem; }
+  h1 { font-size: 1.3rem; }
   .tab {
-    font-size: 0.82em;
-    min-width: 58px;
-    max-width: 45vw;
-    padding: 0.19rem 0.15rem;
+    font-size: 1.01em;
+    min-width: 75px;
+    max-width: 50vw;
+    padding: 0.25rem 0.25rem;
   }
-  form input, form textarea, form select { font-size: 0.97rem; }
-  .buttons button { font-size: 0.9rem; padding: 0.18rem 0.45rem; }
+  form input, form textarea, form select { font-size: 1.01rem; }
+  .buttons button { font-size: 0.95rem; padding: 0.18rem 0.41rem; }
 }
+
