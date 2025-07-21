@@ -71,7 +71,7 @@ form button {
   align-items: center;
   gap: 0.5rem;
 }
-.entry-title {
+.entry-title, .entry-tag {
   font-weight: bold;
 }
 .entry-category {
@@ -127,3 +127,4 @@ form button {
   .container { padding: 0.5rem; }
   .health-row { flex-direction: column; gap: 0.5em; }
 }
+
