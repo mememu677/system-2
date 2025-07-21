@@ -143,7 +143,7 @@ form button:hover {
   font-size: 0.98rem;
   color: #fff9;
 }
-.entry-content, .health-memo, .memo-content, .wh-content {
+.entry-content, .health-content, .memo-content, .wh-content {
   margin-top: 0.5rem;
   color: #fff;
   white-space: pre-wrap;
@@ -179,19 +179,14 @@ form button:hover {
   gap: 1em;
   margin-bottom: 0.7em;
 }
-.health-status {
-  font-size: 1.02em;
-  margin-top: 0.38em;
-  color: #fff;
-}
 
 /* 공통 버튼 필터 (워홀 + 헬스) */
-#wh-tag-filters, .health-tag-row {
+#wh-tag-filters, #health-tag-filters {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.6em;
-  margin: 0 auto 1.2em auto;
+  gap: 1em;
+  margin: 0 auto 1.5em;
   padding: 0 1vw;
 }
 
@@ -226,10 +221,9 @@ form button:hover {
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.6em;
-  margin: 0 auto 1.2em auto;
+  margin: 0 auto 1.2em;
   padding: 0 1vw;
 }
-
 .cat-btn {
   font-family: 'Grenze Gotisch', serif;
   font-size: 1.05rem;
@@ -248,7 +242,6 @@ form button:hover {
   box-shadow: 0 1.5px 8px #0002;
   transition: background 0.19s, color 0.19s, border 0.18s;
 }
-
 .cat-btn.active {
   background: #18181b;
   color: #fff;
@@ -261,12 +254,12 @@ form button:hover {
     padding: 0 1vw 2vw 1vw;
     max-width: 100vw;
   }
-
+  
   h1 {
     font-size: 1.25rem;
     letter-spacing: 0.08em;
   }
-
+  
   .tab {
     font-size: 0.9rem;
     min-width: 70px;
@@ -274,29 +267,24 @@ form button:hover {
     padding: 0.4rem 0.6rem;
     letter-spacing: 0.05em;
   }
-
+  
   form input, form textarea, form select {
     font-size: 0.95rem;
     padding: 0.5rem;
   }
-
+  
   form button {
     font-size: 1rem;
     padding: 0.6rem;
   }
-
+  
   .buttons button {
     font-size: 0.9rem;
     padding: 0.2rem 0.6rem;
   }
-
-  #wh-tag-filters,
-  .health-tag-row {
-    gap: 0.4em;
-    margin-top: 0.7em;
-    margin-bottom: 1.2em;
-    flex-wrap: wrap;
-    justify-content: center;
+  
+  #wh-tag-filters, #health-tag-filters {
+    gap: 0.8em;
   }
 
   .wh-tag-btn,
@@ -320,13 +308,9 @@ form button:hover {
     min-width: 65px;
     max-width: 43vw;
   }
-
+  
   select, textarea {
     font-size: 0.95rem;
   }
 }
 
-    </script>
-  </div>
-</body>
-</html>
