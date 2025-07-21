@@ -32,14 +32,22 @@
 
     <!-- Health Check Board -->
     <section id="health-section" style="display:none;">
+      <div id="health-tag-filters">
+        <button class="health-tag-btn active" data-tag="all">All</button>
+        <button class="health-tag-btn" data-tag="sleep">Sleep</button>
+        <button class="health-tag-btn" data-tag="meal">Meal</button>
+        <button class="health-tag-btn" data-tag="medication">Medication</button>
+        <button class="health-tag-btn" data-tag="mood">Mood</button>
+        <button class="health-tag-btn" data-tag="exercise">Exercise</button>
+      </div>
       <form id="health-form">
-        <div class="health-row">
-          <label><input type="checkbox" name="sleep" /> Sleep</label>
-          <label><input type="checkbox" name="meal" /> Meal</label>
-          <label><input type="checkbox" name="med" /> Medication</label>
-          <label><input type="checkbox" name="mood" /> Mood</label>
-          <label><input type="checkbox" name="exercise" /> Exercise</label>
-        </div>
+        <select id="health-tag" required>
+          <option value="sleep">Sleep</option>
+          <option value="meal">Meal</option>
+          <option value="medication">Medication</option>
+          <option value="mood">Mood</option>
+          <option value="exercise">Exercise</option>
+        </select>
         <textarea id="health-memo" placeholder="Memo (optional)" rows="2"></textarea>
         <button type="submit">Submit</button>
       </form>
