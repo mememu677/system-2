@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SeonYul System Diary</title>
-  <!-- 고스펑크 폰트 (Creepster + Roboto Mono) -->
+  <!-- Fonts: Goth-Punk (Creepster + Roboto Mono) -->
   <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -16,35 +16,14 @@
         <button id="tab-diary" class="tab active">Diary</button>
         <button id="tab-health" class="tab">Health Check</button>
         <button id="tab-memo" class="tab">Memo</button>
+        <button id="tab-wh" class="tab">Working Holiday</button>
       </nav>
-      <!-- Category filter -->
-      <div id="category-filters">
-        <button data-cat="All" class="cat-btn active">All</button>
-        <button data-cat="General" class="cat-btn">General</button>
-        <button data-cat="Health" class="cat-btn">Health</button>
-        <button data-cat="Schedule" class="cat-btn">Schedule</button>
-        <button data-cat="Record" class="cat-btn">Record</button>
-        <button data-cat="Chat" class="cat-btn">Chat</button>
-        <button data-cat="Working Holiday" class="cat-btn">Working Holiday</button>
-      </div>
-      <!-- WH tags (dynamic, only for WH cat) -->
-      <div id="wh-tag-filters" style="display:none;"></div>
     </header>
 
     <!-- Diary Board -->
     <section id="diary-section">
       <form id="diary-form">
-        <select id="diary-category" required>
-          <option value="General">General</option>
-          <option value="Health">Health</option>
-          <option value="Schedule">Schedule</option>
-          <option value="Record">Record</option>
-          <option value="Chat">Chat</option>
-          <option value="Working Holiday">Working Holiday</option>
-        </select>
-        <div id="title-input-group">
-          <input type="text" id="diary-title" placeholder="Title" required />
-        </div>
+        <input type="text" id="diary-title" placeholder="Title" required />
         <textarea id="diary-content" placeholder="Content" required></textarea>
         <button type="submit">Post</button>
       </form>
@@ -76,7 +55,30 @@
       </form>
       <div id="memo-entries"></div>
     </section>
+
+    <!-- Working Holiday Board -->
+    <section id="wh-section" style="display:none;">
+      <div id="wh-tag-filters">
+        <button data-wh="All" class="wh-tag-btn active">All</button>
+        <button data-wh="Planning" class="wh-tag-btn">Planning</button>
+        <button data-wh="In Progress" class="wh-tag-btn">In Progress</button>
+        <button data-wh="Completed" class="wh-tag-btn">Completed</button>
+        <button data-wh="English Study" class="wh-tag-btn">English Study</button>
+      </div>
+      <form id="wh-form">
+        <select id="wh-title" required>
+          <option value="Planning">Planning</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Completed">Completed</option>
+          <option value="English Study">English Study</option>
+        </select>
+        <textarea id="wh-content" placeholder="Content" required></textarea>
+        <button type="submit">Post</button>
+      </form>
+      <div id="wh-entries"></div>
+    </section>
+
+    <script src="app.js"></script>
   </div>
-  <script src="app.js"></script>
 </body>
 </html>
