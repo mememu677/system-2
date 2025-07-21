@@ -1,67 +1,80 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>시스템 다이어리 & 건강체크</title>
+  <title>SeonYul System Diary</title>
+  <!-- 고스펑크 폰트 (Creepster + Roboto Mono) -->
+  <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>시스템 다이어리</h1>
+      <h1>SeonYul System Diary</h1>
       <nav>
-        <button id="tab-diary" class="tab active">다이어리</button>
-        <button id="tab-health" class="tab">건강체크</button>
+        <button id="tab-diary" class="tab active">Diary</button>
+        <button id="tab-health" class="tab">Health Check</button>
+        <button id="tab-memo" class="tab">Memo</button>
       </nav>
-      <!-- 카테고리 필터 버튼 -->
+      <!-- Category filter -->
       <div id="category-filters">
-        <button data-cat="전체" class="cat-btn active">전체</button>
-        <button data-cat="기본" class="cat-btn">기본</button>
-        <button data-cat="건강" class="cat-btn">건강</button>
-        <button data-cat="일정" class="cat-btn">일정</button>
-        <button data-cat="기록" class="cat-btn">기록</button>
-        <button data-cat="잡담" class="cat-btn">잡담</button>
-        <button data-cat="호주 워홀 계획" class="cat-btn">호주 워홀 계획</button>
+        <button data-cat="All" class="cat-btn active">All</button>
+        <button data-cat="General" class="cat-btn">General</button>
+        <button data-cat="Health" class="cat-btn">Health</button>
+        <button data-cat="Schedule" class="cat-btn">Schedule</button>
+        <button data-cat="Record" class="cat-btn">Record</button>
+        <button data-cat="Chat" class="cat-btn">Chat</button>
+        <button data-cat="Working Holiday" class="cat-btn">Working Holiday</button>
       </div>
-      <!-- 워홀 태그 필터 버튼 (동적으로 생성/제거) -->
+      <!-- WH tags (dynamic, only for WH cat) -->
       <div id="wh-tag-filters" style="display:none;"></div>
     </header>
 
-    <!-- 다이어리 게시판 -->
+    <!-- Diary Board -->
     <section id="diary-section">
       <form id="diary-form">
         <select id="diary-category" required>
-          <option value="기본">기본</option>
-          <option value="건강">건강</option>
-          <option value="일정">일정</option>
-          <option value="기록">기록</option>
-          <option value="잡담">잡담</option>
-          <option value="호주 워홀 계획">호주 워홀 계획</option>
+          <option value="General">General</option>
+          <option value="Health">Health</option>
+          <option value="Schedule">Schedule</option>
+          <option value="Record">Record</option>
+          <option value="Chat">Chat</option>
+          <option value="Working Holiday">Working Holiday</option>
         </select>
         <div id="title-input-group">
-          <input type="text" id="diary-title" placeholder="제목" required />
+          <input type="text" id="diary-title" placeholder="Title" required />
         </div>
-        <textarea id="diary-content" placeholder="내용" required></textarea>
-        <button type="submit">작성</button>
+        <textarea id="diary-content" placeholder="Content" required></textarea>
+        <button type="submit">Post</button>
       </form>
       <div id="diary-entries"></div>
     </section>
 
-    <!-- 건강체크 게시판 -->
+    <!-- Health Check Board -->
     <section id="health-section" style="display:none;">
       <form id="health-form">
         <div class="health-row">
-          <label><input type="checkbox" name="sleep" /> 수면</label>
-          <label><input type="checkbox" name="meal" /> 식사</label>
-          <label><input type="checkbox" name="med" /> 약</label>
-          <label><input type="checkbox" name="mood" /> 기분</label>
-          <label><input type="checkbox" name="exercise" /> 운동</label>
+          <label><input type="checkbox" name="sleep" /> Sleep</label>
+          <label><input type="checkbox" name="meal" /> Meal</label>
+          <label><input type="checkbox" name="med" /> Medication</label>
+          <label><input type="checkbox" name="mood" /> Mood</label>
+          <label><input type="checkbox" name="exercise" /> Exercise</label>
         </div>
-        <textarea id="health-memo" placeholder="메모(선택)" rows="2"></textarea>
-        <button type="submit">기록</button>
+        <textarea id="health-memo" placeholder="Memo (optional)" rows="2"></textarea>
+        <button type="submit">Submit</button>
       </form>
       <div id="health-entries"></div>
+    </section>
+
+    <!-- Memo Board -->
+    <section id="memo-section" style="display:none;">
+      <form id="memo-form">
+        <input type="text" id="memo-title" placeholder="Title" required />
+        <textarea id="memo-content" placeholder="Memo" required></textarea>
+        <button type="submit">Save</button>
+      </form>
+      <div id="memo-entries"></div>
     </section>
   </div>
   <script src="app.js"></script>
