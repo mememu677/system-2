@@ -185,7 +185,8 @@ form button:hover {
   color: #fff;
 }
 
-#wh-tag-filters {
+/* 워홀 버튼 + 헬스 카테고리 버튼 동일 적용 */
+#wh-tag-filters, .health-tag-row {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -194,8 +195,8 @@ form button:hover {
   padding: 0 1vw;
 }
 
-.wh-tag-btn {
-  font-family: 'Montserrat', 'Grenze Gotisch', serif;
+.wh-tag-btn, .health-tag-btn {
+  font-family: 'Grenze Gotisch', serif;
   font-size: 1.05rem;
   font-weight: 700;
   background: #fff;
@@ -213,7 +214,7 @@ form button:hover {
   box-shadow: 0 1.5px 8px #0002;
   transition: background 0.19s, color 0.19s, border 0.18s;
 }
-.wh-tag-btn.active {
+.wh-tag-btn.active, .health-tag-btn.active {
   background: #18181b;
   color: #fff;
   border: 2.3px solid #fff;
@@ -237,7 +238,7 @@ form button:hover {
   form input, form textarea, form select { font-size: 1.01rem; }
   .buttons button { font-size: 0.95rem; padding: 0.18rem 0.41rem; }
 
-  .wh-tag-btn {
+  .wh-tag-btn, .health-tag-btn {
     font-size: 0.92rem;
     padding: 0.3em 0.9em;
     min-width: 65px;
@@ -245,5 +246,4 @@ form button:hover {
     text-align: center;
   }
 }
-
 
