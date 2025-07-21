@@ -1,0 +1,85 @@
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: #f5f5f5;
+  color: #333;
+}
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+form {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+form input,
+form textarea {
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+form button {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 4px;
+  background: #333;
+  color: #fff;
+  cursor: pointer;
+}
+.entry {
+  background: #fff;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.entry-title {
+  font-weight: bold;
+}
+.entry-date {
+  font-size: 0.85rem;
+  color: #666;
+}
+.entry-content {
+  white-space: pre-wrap;
+  margin-top: 0.5rem;
+}
+.buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+.buttons button {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.85rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.buttons .edit {
+  background: #4CAF50;
+  color: #fff;
+}
+.buttons .delete {
+  background: #F44336;
+  color: #fff;
+}
+
+@media (max-width: 600px) {
+  .container { padding: 0.5rem; }
+}

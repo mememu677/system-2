@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>시스템 다이어리</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>시스템 다이어리</h1>
+    </header>
+
+    <form id="entry-form">
+      <input type="text" id="entry-title" placeholder="제목" required />
+      <textarea id="entry-content" placeholder="내용" required></textarea>
+      <button type="submit">작성</button>
+    </form>
+
+    <div id="entries"></div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
