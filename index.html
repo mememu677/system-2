@@ -18,7 +18,7 @@
         <button id="tab-memo" class="tab">Memo</button>
         <button id="tab-wh" class="tab">Working Holiday</button>
       </nav>
-      <!-- Category filters -->
+      <!-- Category filters (for diary categories) -->
       <div id="category-filters">
         <button data-cat="All" class="cat-btn active">All</button>
         <button data-cat="General" class="cat-btn">General</button>
@@ -26,15 +26,6 @@
         <button data-cat="Schedule" class="cat-btn">Schedule</button>
         <button data-cat="Record" class="cat-btn">Record</button>
         <button data-cat="Chat" class="cat-btn">Chat</button>
-        <button data-cat="Working Holiday" class="cat-btn">Working Holiday</button>
-      </div>
-      <!-- Working Holiday sub-filters -->
-      <div id="wh-tag-filters" class="sub-filters" style="display:none;">
-        <button data-wh="All" class="wh-tag-btn active">All</button>
-        <button data-wh="Planning" class="wh-tag-btn">Planning</button>
-        <button data-wh="In Progress" class="wh-tag-btn">In Progress</button>
-        <button data-wh="Completed" class="wh-tag-btn">Completed</button>
-        <button data-wh="English Study" class="wh-tag-btn">English Study</button>
       </div>
     </header>
 
@@ -48,7 +39,6 @@
           <option value="Schedule">Schedule</option>
           <option value="Record">Record</option>
           <option value="Chat">Chat</option>
-          <option value="Working Holiday">Working Holiday</option>
         </select>
         <textarea id="diary-content" placeholder="Content" required></textarea>
         <button type="submit">Post</button>
@@ -84,6 +74,14 @@
 
     <!-- Working Holiday Section -->
     <section id="wh-section" style="display:none;">
+      <!-- Sub-category filters for Working Holiday -->
+      <div id="wh-tag-filters" class="sub-filters">
+        <button data-wh="All" class="wh-tag-btn active">All</button>
+        <button data-wh="Planning" class="wh-tag-btn">Planning</button>
+        <button data-wh="In Progress" class="wh-tag-btn">In Progress</button>
+        <button data-wh="Completed" class="wh-tag-btn">Completed</button>
+        <button data-wh="English Study" class="wh-tag-btn">English Study</button>
+      </div>
       <form id="wh-form">
         <select id="wh-title" required>
           <option value="Planning">Planning</option>
@@ -101,4 +99,3 @@
   </div>
 </body>
 </html>
-
