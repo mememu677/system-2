@@ -1,9 +1,10 @@
 * { box-sizing: border-box; }
 body {
   margin: 0;
-  font-family: sans-serif;
-  background: #f5f5f5;
-  color: #333;
+  font-family: 'Creepster', 'Roboto Mono', monospace;
+  background: #111119;
+  color: #f6f6f6;
+  letter-spacing: 0.01em;
 }
 .container {
   max-width: 600px;
@@ -14,6 +15,14 @@ header {
   text-align: center;
   margin-bottom: 1rem;
 }
+h1 {
+  font-family: 'Creepster', cursive;
+  font-size: 2.2em;
+  margin-bottom: 0.6em;
+  letter-spacing: 0.06em;
+  color: #d65cfc;
+  text-shadow: 2px 2px 7px #000, 0 2px 24px #7f1d7c;
+}
 nav {
   display: flex;
   justify-content: center;
@@ -21,43 +30,45 @@ nav {
   gap: 0.5rem;
 }
 .tab {
-  padding: 0.5rem 1rem;
+  font-family: 'Roboto Mono', monospace;
+  padding: 0.5rem 1.2rem;
   border: none;
-  background: #e0e0e0;
-  color: #333;
-  font-size: 1rem;
+  background: #28223a;
+  color: #f6f6f6;
+  font-size: 1.06em;
   border-radius: 1em 1em 0 0;
   cursor: pointer;
   outline: none;
+  letter-spacing: 0.03em;
   transition: background 0.2s;
 }
 .tab.active {
-  background: #333;
-  color: #fff;
+  background: #d65cfc;
+  color: #0b001b;
 }
-
 #category-filters {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.5em;
-  margin-bottom: 0.5em;
+  margin-bottom: 0.6em;
 }
 .cat-btn {
-  background: #e0e0e0;
-  color: #333;
+  font-family: 'Roboto Mono', monospace;
+  background: #28223a;
+  color: #f6f6f6;
   border: none;
   border-radius: 2em;
   padding: 0.3em 1em;
   cursor: pointer;
   font-size: 0.97em;
-  transition: background 0.2s;
+  margin-bottom: 0.2em;
+  transition: background 0.2s, color 0.2s;
 }
 .cat-btn.active {
-  background: #2d7b5f;
-  color: #fff;
+  background: #d65cfc;
+  color: #140222;
 }
-
 #wh-tag-filters {
   display: flex;
   flex-wrap: wrap;
@@ -66,8 +77,9 @@ nav {
   margin-bottom: 1em;
 }
 .wh-tag-btn {
-  background: #edf4ff;
-  color: #2461c9;
+  font-family: 'Roboto Mono', monospace;
+  background: #4c6bd8;
+  color: #f6f6f6;
   border: none;
   border-radius: 2em;
   padding: 0.28em 1em;
@@ -77,11 +89,10 @@ nav {
   border: 1px solid #b4cefa;
 }
 .wh-tag-btn.active {
-  background: #2461c9;
+  background: #f6247e;
   color: #fff;
-  border-color: #2461c9;
+  border-color: #f6247e;
 }
-
 form {
   display: flex;
   flex-direction: column;
@@ -91,60 +102,77 @@ form {
 form input,
 form textarea,
 form select {
+  font-family: 'Roboto Mono', monospace;
   padding: 0.5rem;
   font-size: 1rem;
-  border: 1px solid #ccc;
+  border: 1px solid #7f1d7c;
   border-radius: 4px;
+  background: #21142c;
+  color: #fff;
 }
 form button {
-  padding: 0.75rem;
-  font-size: 1rem;
+  font-family: 'Creepster', 'Roboto Mono', monospace;
+  padding: 0.7rem;
+  font-size: 1.1em;
   border: none;
   border-radius: 4px;
-  background: #333;
+  background: #f6247e;
   color: #fff;
   cursor: pointer;
+  margin-top: 0.1em;
+  letter-spacing: 0.08em;
+  transition: background 0.15s;
 }
-.entry, .health-entry {
-  background: #fff;
+form button:hover {
+  background: #d65cfc;
+  color: #140222;
+}
+.entry, .health-entry, .memo-entry {
+  background: #22152e;
   padding: 1rem;
   margin-bottom: 1rem;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.09);
+  border-radius: 6px;
+  box-shadow: 0 2px 16px rgba(80,0,90,0.14);
+  font-family: 'Roboto Mono', monospace;
 }
-.entry-header, .health-header {
+.entry-header, .health-header, .memo-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 0.5rem;
+  font-family: 'Roboto Mono', monospace;
 }
-.entry-title, .entry-tag {
+.entry-title, .entry-tag, .memo-title {
   font-weight: bold;
+  letter-spacing: 0.02em;
 }
 .entry-category {
   font-size: 0.95em;
-  background: #e0e0e0;
-  color: #333;
+  background: #2b1754;
+  color: #e9b4fc;
   border-radius: 2em;
-  padding: 0.1em 0.8em;
+  padding: 0.12em 0.8em;
   margin-right: 0.5em;
 }
 .entry-tag {
   font-size: 0.9em;
-  background: #2676e7;
-  color: #fff;
+  background: #1e1938;
+  color: #87aaf7;
   border-radius: 2em;
-  padding: 0.1em 0.8em;
+  padding: 0.13em 0.7em;
   margin-right: 0.5em;
   margin-left: 0.5em;
+  letter-spacing: 0.08em;
 }
-.entry-date, .health-date {
+.entry-date, .health-date, .memo-date {
   font-size: 0.85rem;
-  color: #666;
+  color: #d88dff;
 }
-.entry-content, .health-memo {
+.entry-content, .health-memo, .memo-content {
   white-space: pre-wrap;
   margin-top: 0.5rem;
+  color: #e3e2fa;
+  font-family: 'Roboto Mono', monospace;
 }
 .buttons {
   display: flex;
@@ -152,18 +180,21 @@ form button {
   margin-top: 0.5rem;
 }
 .buttons button {
-  padding: 0.25rem 0.5rem;
+  font-family: 'Roboto Mono', monospace;
+  padding: 0.25rem 0.7rem;
   font-size: 0.85rem;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-}
-.buttons .edit {
-  background: #4CAF50;
+  background: #3e225b;
   color: #fff;
 }
+.buttons .edit {
+  background: #5fdf8f;
+  color: #15151b;
+}
 .buttons .delete {
-  background: #F44336;
+  background: #f6247e;
   color: #fff;
 }
 
@@ -176,13 +207,14 @@ form button {
 .health-status {
   font-size: 0.95em;
   margin-top: 0.5em;
-  color: #2d7b5f;
+  color: #3effc6;
+  font-family: 'Roboto Mono', monospace;
 }
 
 @media (max-width: 600px) {
   .container { padding: 0.5rem; }
-  #category-filters { gap: 0.2em; }
-  #wh-tag-filters { gap: 0.1em; }
+  #category-filters { gap: 0.18em; }
+  #wh-tag-filters { gap: 0.08em; }
   .health-row { flex-direction: column; gap: 0.5em; }
 }
 
