@@ -95,7 +95,114 @@
       <div id="wh-entries"></div>
     </section>
 
-    <script src="app.js"></script>
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Utility to show a section and hide others
+  function showSection(id) {
+    document.querySelectorAll('section').forEach(sec => sec.style.display = 'none');
+    document.getElementById(id).style.display = '';
+  }
+  // Tab switching
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      showSection(tab.id.replace('tab-', '') + '-section');
+    });
+  });
+
+  // Diary
+  let diaryEntries = JSON.parse(localStorage.getItem('diaryEntries') || '[]');
+  const diaryForm = document.getElementById('diary-form');
+  const diaryEntriesDiv = document.getElementById('diary-entries');
+  function renderDiary() {
+    diaryEntriesDiv.innerHTML = diaryEntries.map(e => `
+      <div class="entry">
+        <h3>[${e.category}] ${e.title}</h3>
+        <p>${e.content}</p>
+      </div>`).join('');
+  }
+  renderDiary();
+  diaryForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const title = document.getElementById('diary-title').value;
+    const category = document.getElementById('diary-category').value;
+    const content = document.getElementById('diary-content').value;
+    diaryEntries.push({ title, category, content });
+    localStorage.setItem('diaryEntries', JSON.stringify(diaryEntries));
+    renderDiary();
+    diaryForm.reset();
+  });
+
+  // Health
+  let healthEntries = JSON.parse(localStorage.getItem('healthEntries') || '[]');
+  const healthForm = document.getElementById('health-form');
+  const healthEntriesDiv = document.getElementById('health-entries');
+  function renderHealth() {
+    healthEntriesDiv.innerHTML = healthEntries.map(e => `
+      <div class="entry">
+        <p><strong>${e.date}</strong><br>
+        Sleep: ${e.sleep}, Meal: ${e.meal}, Med: ${e.med}, Mood: ${e.mood}, Exercise: ${e.exercise}<br>
+        Memo: ${e.memo}</p>
+      </div>`).join('');
+  }
+  renderHealth();
+  healthForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const { sleep, meal, med, mood, exercise } = healthForm;
+    const memo = document.getElementById('health-memo').value;
+    const date = new Date().toLocaleString();
+    healthEntries.push({ date, sleep: sleep.checked, meal: meal.checked, med: med.checked, mood: mood.checked, exercise: exercise.checked, memo });
+    localStorage.setItem('healthEntries', JSON.stringify(healthEntries));
+    renderHealth();
+    healthForm.reset();
+  });
+
+  // Memo
+  let memoEntries = JSON.parse(localStorage.getItem('memoEntries') || '[]');
+  const memoForm = document.getElementById('memo-form');
+  const memoEntriesDiv = document.getElementById('memo-entries');
+  function renderMemo() {
+    memoEntriesDiv.innerHTML = memoEntries.map(e => `
+      <div class="entry">
+        <h3>${e.title}</h3>
+        <p>${e.content}</p>
+      </div>`).join('');
+  }
+  renderMemo();
+  memoForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const title = document.getElementById('memo-title').value;
+    const content = document.getElementById('memo-content').value;
+    memoEntries.push({ title, content });
+    localStorage.setItem('memoEntries', JSON.stringify(memoEntries));
+    renderMemo();
+    memoForm.reset();
+  });
+
+  // Working Holiday
+  let whEntries = JSON.parse(localStorage.getItem('whEntries') || '[]');
+  const whForm = document.getElementById('wh-form');
+  const whEntriesDiv = document.getElementById('wh-entries');
+  function renderWH() {
+    whEntriesDiv.innerHTML = whEntries.map(e => `
+      <div class="entry">
+        <h3>[${e.title}]</h3>
+        <p>${e.content}</p>
+      </div>`).join('');
+  }
+  renderWH();
+  whForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const title = document.getElementById('wh-title').value;
+    const content = document.getElementById('wh-content').value;
+    whEntries.push({ title, content });
+    localStorage.setItem('whEntries', JSON.stringify(whEntries));
+    renderWH();
+    whForm.reset();
+  });
+});
+</script>
   </div>
 </body>
 </html>
