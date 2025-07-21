@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SeonYul System Diary</title>
-  <link href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@700&family=Montserrat:wght@700&family=Nanum+Myeongjo:wght@700&display=swap" rel="stylesheet">
+  <!-- Fonts: Goth-Punk (Creepster + Roboto Mono) -->
+  <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -31,7 +32,7 @@
 
     <!-- Health Check Board -->
     <section id="health-section" style="display:none;">
-      <div id="health-tag-filters" class="health-tag-row">
+      <div id="health-tag-filters">
         <button class="health-tag-btn active" data-tag="all">All</button>
         <button class="health-tag-btn" data-tag="sleep">Sleep</button>
         <button class="health-tag-btn" data-tag="meal">Meal</button>
@@ -40,13 +41,13 @@
         <button class="health-tag-btn" data-tag="exercise">Exercise</button>
       </div>
       <form id="health-form">
-        <div class="health-row">
-          <label><input type="checkbox" id="sleep"> Sleep</label>
-          <label><input type="checkbox" id="meal"> Meal</label>
-          <label><input type="checkbox" id="med"> Medication</label>
-          <label><input type="checkbox" id="mood"> Mood</label>
-          <label><input type="checkbox" id="exercise"> Exercise</label>
-        </div>
+        <select id="health-tag" required>
+          <option value="sleep">Sleep</option>
+          <option value="meal">Meal</option>
+          <option value="medication">Medication</option>
+          <option value="mood">Mood</option>
+          <option value="exercise">Exercise</option>
+        </select>
         <textarea id="health-memo" placeholder="Memo (optional)" rows="2"></textarea>
         <button type="submit">Submit</button>
       </form>
