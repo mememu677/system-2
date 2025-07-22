@@ -65,14 +65,14 @@
 </html>
 
 <!-- app.js -->
-// --- Firebase 초기화
+// --- Firebase 초기화 (새 데이터베이스)
 const firebaseConfig = {
-  apiKey: "AIzaSyA5iUOC2ssspPcWiOUIufvcsSvxRKxq9tQ",
-  authDomain: "seonyul-diary.firebaseapp.com",
-  projectId: "seonyul-diary",
-  storageBucket: "seonyul-diary.appspot.com",    // 수정된 부분
-  messagingSenderId: "878348511022",
-  appId: "1:878348511022:web:bed753af7c021cc44dfcbf"
+  apiKey: "AIzaSyAT9KX860C-LWcce69VouUbMXg3ah6BVXk",
+  authDomain: "system-384a7.firebaseapp.com",
+  projectId: "system-384a7",
+  storageBucket: "system-384a7.appspot.com",
+  messagingSenderId: "155681313154",
+  appId: "1:155681313154:web:5086b477aece518d6bbf9b"
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
@@ -109,7 +109,7 @@ diaryForm.addEventListener('submit', async e => {
     category: diaryCat.value,
     title: diaryTitle.value,
     content: document.getElementById('diary-content').value,
-    date: new Date().toISOString()
+    date: new Date().toISOString()  // 클라이언트 타임스탬프로 저장
   };
   try {
     await db.collection("diaryEntries").add(entry);
