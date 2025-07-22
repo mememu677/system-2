@@ -6,6 +6,7 @@
   <title>SeonYul System Diary</title>
   <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css"/>
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
@@ -39,8 +40,7 @@
       <div id="diary-entries"></div>
     </section>
 
-    <!-- 나머지 sections는 그대로 -->
-    <!-- Health Check Section -->
+    <!-- 나머지 Section은 그대로 유지 -->
     <section id="health-section" style="display:none;">
       <div id="health-tag-filters"></div>
       <form id="health-form">
@@ -50,7 +50,6 @@
       <div id="health-entries"></div>
     </section>
 
-    <!-- Memo Section -->
     <section id="memo-section" style="display:none;">
       <form id="memo-form">
         <input type="text" id="memo-title" placeholder="Title" required />
@@ -60,7 +59,6 @@
       <div id="memo-entries"></div>
     </section>
 
-    <!-- Working Holiday Section -->
     <section id="wh-section" style="display:none;">
       <div id="wh-tag-filters"></div>
       <form id="wh-form">
@@ -76,7 +74,9 @@
       <div id="wh-entries"></div>
     </section>
 
+    <!-- Firebase 연결 및 글쓰기 -->
     <script>
+      // Firebase 설정
       const firebaseConfig = {
         apiKey: "AIzaSyA41qntUR_bkZT2kTGYG5lAHbguR8_5Sbk",
         authDomain: "seonyulsystem.firebaseapp.com",
@@ -89,46 +89,66 @@
       const db = firebase.firestore();
 
       document.addEventListener('DOMContentLoaded', () => {
+        // 탭 전환
         function showSection(id) {
-          document.querySelectorAll('section').forEach(s=>s.style.display='none');
-          document.getElementById(id).style.display='';
+          document.querySelectorAll('section').forEach(s => s.style.display = 'none');
+          document.getElementById(id).style.display = '';
         }
-        document.querySelectorAll('.tab').forEach(tab=>{
-          tab.addEventListener('click', ()=>{
-            document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(tab => {
+          tab.addEventListener('click', () => {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
-            showSection(tab.id.replace('tab-','')+'-section');
+            showSection(tab.id.replace('tab-', '') + '-section');
           });
         });
 
-        // Diary filters & entries
-        const diaryCats=['All','General','Health','Schedule','Record','Chat'];
-        const catDiv=document.getElementById('category-filters');
-        diaryCats.forEach(cat=>{
-          const b=document.createElement('button');b.className='cat-btn';b.innerText=cat;
-          b.addEventListener('click',()=>{document.querySelectorAll('.cat-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderDiary();});
+        // Diary 카테고리 필터
+        const diaryCats = ['All', 'General', 'Health', 'Schedule', 'Record', 'Chat'];
+        const catDiv = document.getElementById('category-filters');
+        diaryCats.forEach(cat => {
+          const b = document.createElement('button');
+          b.className = 'cat-btn';
+          b.innerText = cat;
+          b.addEventListener('click', () => {
+            document.querySelectorAll('.cat-btn').forEach(x => x.classList.remove('active'));
+            b.classList.add('active');
+            renderDiary();
+          });
           catDiv.appendChild(b);
         });
         catDiv.firstChild.classList.add('active');
 
-        const diaryForm=document.getElementById('diary-form'), diaryDiv=document.getElementById('diary-entries');
+        // 글 불러오기
+        async function renderDiary() {
+          const active = document.querySelector('.cat-btn.active').innerText;
+          const snapshot = await db.collection("diaryEntries").orderBy("date", "desc").get();
+          const filtered = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+            .filter(e => active === 'All' || e.category === active);
 
-        async function renderDiary(){
-          const active=document.querySelector('.cat-btn.active').innerText;
-          const snapshot = await db.collection("diaryEntries").orderBy("date","desc").get();
-          const filtered = snapshot.docs.map(doc=>doc.data()).filter(e=>active==='All'||e.category===active);
-          diaryDiv.innerHTML=filtered.map(e=>`<div class="entry"><div class="entry-header"><span class="entry-date">${e.date}</span><span class="entry-title">[${e.category}] ${e.title}</span></div><div class="entry-content">${e.content}</div></div>`).join('');
+          const diaryDiv = document.getElementById('diary-entries');
+          diaryDiv.innerHTML = filtered.map(e => `
+            <div class="entry">
+              <div class="entry-header">
+                <span class="entry-date">${new Date(e.date.toDate()).toLocaleString()}</span>
+                <span class="entry-title">[${e.category}] ${e.title}</span>
+              </div>
+              <div class="entry-content">${e.content}</div>
+            </div>
+          `).join('');
         }
 
-        diaryForm.addEventListener('submit',async e=>{
+        // 글 저장
+        const diaryForm = document.getElementById('diary-form');
+        diaryForm.addEventListener('submit', async (e) => {
           e.preventDefault();
-          const date=new Date().toLocaleString(),
-                title=document.getElementById('diary-title').value,
-                category=document.getElementById('diary-category').value,
-                content=document.getElementById('diary-content').value;
-          await db.collection("diaryEntries").add({date,title,category,content});
-          renderDiary();
+          const title = document.getElementById('diary-title').value;
+          const category = document.getElementById('diary-category').value;
+          const content = document.getElementById('diary-content').value;
+          const date = new Date(); // Firebase timestamp로 저장
+
+          await db.collection("diaryEntries").add({ title, category, content, date });
           diaryForm.reset();
+          renderDiary();
         });
 
         renderDiary();
