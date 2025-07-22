@@ -22,7 +22,7 @@
   </div>
 
   <script>
-    // ✅ Firebase 설정
+    // Firebase 설정
     const firebaseConfig = {
       apiKey: "AIzaSyA5iUOC2ssspPcWiOUIufvcsSvxRKxq9tQ",
       authDomain: "seonyul-diary.firebaseapp.com",
@@ -38,31 +38,38 @@
     const form = document.getElementById('diary-form');
     const entriesDiv = document.getElementById('entries');
 
+    // 실시간 리스너로 데이터 로드
+    db.collection("diaryEntries")
+      .orderBy("date", "desc")
+      .onSnapshot(snapshot => {
+        entriesDiv.innerHTML = snapshot.docs.map(doc => {
+          const d = doc.data();
+          const humanDate = d.date && d.date.toDate ? d.date.toDate().toLocaleString() : new Date(d.date).toLocaleString();
+          return `<div>
+                    <strong>${d.title}</strong> (${humanDate})<br>
+                    ${d.content}
+                  </div><hr>`;
+        }).join('');
+      });
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const title = document.getElementById('title').value;
       const content = document.getElementById('content').value;
-      const date = new Date().toLocaleString();
 
       try {
-        await db.collection("diaryEntries").add({ title, content, date });
+        await db.collection("diaryEntries").add({
+          title,
+          content,
+          date: firebase.firestore.FieldValue.serverTimestamp()
+        });
         form.reset();
-        loadEntries();
       } catch (err) {
         console.error("저장 실패:", err);
         alert("Firebase 저장 실패!");
       }
     });
-
-    async function loadEntries() {
-      const snapshot = await db.collection("diaryEntries").orderBy("date", "desc").get();
-      entriesDiv.innerHTML = snapshot.docs.map(doc => {
-        const d = doc.data();
-        return `<div><strong>${d.title}</strong> (${d.date})<br>${d.content}</div><hr>`;
-      }).join('');
-    }
-
-    loadEntries();
   </script>
 </body>
 </html>
+
