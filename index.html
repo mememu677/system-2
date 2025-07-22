@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css"/>
 
-  <!-- Firebase compat SDK -->
+  <!-- Firebase SDK (compat version) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
@@ -41,10 +41,8 @@
       <div id="diary-entries"></div>
     </section>
 
-    <!-- 기타 섹션은 일단 생략 가능 -->
-    
     <script>
-      // Firebase 설정
+      // ✅ Firebase 설정
       const firebaseConfig = {
         apiKey: "AIzaSyA41qntUR_bkZT2kTGYG5lAHbguR8_5Sbk",
         authDomain: "seonyulsystem.firebaseapp.com",
@@ -57,7 +55,7 @@
       const db = firebase.firestore();
 
       document.addEventListener('DOMContentLoaded', () => {
-        // 탭 전환
+        // 🔀 탭 전환
         function showSection(id) {
           document.querySelectorAll('section').forEach(s => s.style.display = 'none');
           document.getElementById(id).style.display = '';
@@ -70,7 +68,7 @@
           });
         });
 
-        // 카테고리 필터 생성
+        // 📌 필터 버튼 생성
         const diaryCats = ['All','General','Health','Schedule','Record','Chat'];
         const catDiv = document.getElementById('category-filters');
         diaryCats.forEach(cat => {
@@ -86,10 +84,10 @@
         });
         catDiv.firstChild.classList.add('active');
 
-        // 작성 처리
         const diaryForm = document.getElementById('diary-form');
         const diaryDiv = document.getElementById('diary-entries');
 
+        // 📥 렌더링 함수
         async function renderDiary() {
           const active = document.querySelector('.cat-btn.active').innerText;
           const snapshot = await db.collection("diaryEntries").orderBy("date", "desc").get();
@@ -106,15 +104,21 @@
           `).join('');
         }
 
+        // ✏️ 글 작성 처리
         diaryForm.addEventListener('submit', async e => {
           e.preventDefault();
           const date = new Date().toLocaleString();
           const title = document.getElementById('diary-title').value;
           const category = document.getElementById('diary-category').value;
           const content = document.getElementById('diary-content').value;
-          await db.collection("diaryEntries").add({ date, title, category, content });
-          renderDiary();
-          diaryForm.reset();
+          try {
+            await db.collection("diaryEntries").add({ date, title, category, content });
+            renderDiary();
+            diaryForm.reset();
+          } catch (err) {
+            alert("저장 실패! 콘솔 확인");
+            console.error("Firestore 오류:", err);
+          }
         });
 
         renderDiary();
@@ -123,3 +127,4 @@
   </div>
 </body>
 </html>
+
