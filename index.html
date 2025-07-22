@@ -3,128 +3,66 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SeonYul System Diary</title>
-  <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css"/>
-
-  <!-- Firebase SDK (compat version) -->
+  <title>Seonyul Diary</title>
+  <link rel="stylesheet" href="style.css" />
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
   <div class="container">
-    <header>
-      <h1>SeonYul System Diary</h1>
-      <nav>
-        <button id="tab-diary" class="tab active">Diary</button>
-        <button id="tab-health" class="tab">Health Check</button>
-        <button id="tab-memo" class="tab">Memo</button>
-        <button id="tab-wh" class="tab">Working Holiday</button>
-      </nav>
-    </header>
+    <h1>Seonyul Diary</h1>
 
-    <!-- Diary Section -->
-    <section id="diary-section">
-      <div id="category-filters"></div>
-      <form id="diary-form">
-        <input type="text" id="diary-title" placeholder="Title" required />
-        <select id="diary-category" required>
-          <option value="General">General</option>
-          <option value="Health">Health</option>
-          <option value="Schedule">Schedule</option>
-          <option value="Record">Record</option>
-          <option value="Chat">Chat</option>
-        </select>
-        <textarea id="diary-content" placeholder="Content" required></textarea>
-        <button type="submit">Post</button>
-      </form>
-      <div id="diary-entries"></div>
-    </section>
+    <form id="diary-form">
+      <input type="text" id="title" placeholder="Title" required />
+      <textarea id="content" placeholder="Content" required></textarea>
+      <button type="submit">Save</button>
+    </form>
 
-    <script>
-      // ✅ Firebase 설정
-      const firebaseConfig = {
-        apiKey: "AIzaSyA41qntUR_bkZT2kTGYG5lAHbguR8_5Sbk",
-        authDomain: "seonyulsystem.firebaseapp.com",
-        projectId: "seonyulsystem",
-        storageBucket: "seonyulsystem.firebasestorage.app",
-        messagingSenderId: "938459461117",
-        appId: "1:938459461117:web:9f3681a7ec5796472f5594"
-      };
-      firebase.initializeApp(firebaseConfig);
-      const db = firebase.firestore();
-
-      document.addEventListener('DOMContentLoaded', () => {
-        // 🔀 탭 전환
-        function showSection(id) {
-          document.querySelectorAll('section').forEach(s => s.style.display = 'none');
-          document.getElementById(id).style.display = '';
-        }
-        document.querySelectorAll('.tab').forEach(tab => {
-          tab.addEventListener('click', () => {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            showSection(tab.id.replace('tab-', '') + '-section');
-          });
-        });
-
-        // 📌 필터 버튼 생성
-        const diaryCats = ['All','General','Health','Schedule','Record','Chat'];
-        const catDiv = document.getElementById('category-filters');
-        diaryCats.forEach(cat => {
-          const btn = document.createElement('button');
-          btn.className = 'cat-btn';
-          btn.innerText = cat;
-          btn.addEventListener('click', () => {
-            document.querySelectorAll('.cat-btn').forEach(x => x.classList.remove('active'));
-            btn.classList.add('active');
-            renderDiary();
-          });
-          catDiv.appendChild(btn);
-        });
-        catDiv.firstChild.classList.add('active');
-
-        const diaryForm = document.getElementById('diary-form');
-        const diaryDiv = document.getElementById('diary-entries');
-
-        // 📥 렌더링 함수
-        async function renderDiary() {
-          const active = document.querySelector('.cat-btn.active').innerText;
-          const snapshot = await db.collection("diaryEntries").orderBy("date", "desc").get();
-          const filtered = snapshot.docs.map(doc => doc.data())
-            .filter(e => active === 'All' || e.category === active);
-          diaryDiv.innerHTML = filtered.map(e => `
-            <div class="entry">
-              <div class="entry-header">
-                <span class="entry-date">${e.date}</span>
-                <span class="entry-title">[${e.category}] ${e.title}</span>
-              </div>
-              <div class="entry-content">${e.content}</div>
-            </div>
-          `).join('');
-        }
-
-        // ✏️ 글 작성 처리
-        diaryForm.addEventListener('submit', async e => {
-          e.preventDefault();
-          const date = new Date().toLocaleString();
-          const title = document.getElementById('diary-title').value;
-          const category = document.getElementById('diary-category').value;
-          const content = document.getElementById('diary-content').value;
-          try {
-            await db.collection("diaryEntries").add({ date, title, category, content });
-            renderDiary();
-            diaryForm.reset();
-          } catch (err) {
-            alert("저장 실패! 콘솔 확인");
-            console.error("Firestore 오류:", err);
-          }
-        });
-
-        renderDiary();
-      });
-    </script>
+    <div id="entries"></div>
   </div>
+
+  <script>
+    // ✅ Firebase 설정
+    const firebaseConfig = {
+      apiKey: "AIzaSyA5iUOC2ssspPcWiOUIufvcsSvxRKxq9tQ",
+      authDomain: "seonyul-diary.firebaseapp.com",
+      projectId: "seonyul-diary",
+      storageBucket: "seonyul-diary.firebasestorage.app",
+      messagingSenderId: "878348511022",
+      appId: "1:878348511022:web:bed753af7c021cc44dfcbf"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const form = document.getElementById('diary-form');
+    const entriesDiv = document.getElementById('entries');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('title').value;
+      const content = document.getElementById('content').value;
+      const date = new Date().toLocaleString();
+
+      try {
+        await db.collection("diaryEntries").add({ title, content, date });
+        form.reset();
+        loadEntries();
+      } catch (err) {
+        console.error("저장 실패:", err);
+        alert("Firebase 저장 실패!");
+      }
+    });
+
+    async function loadEntries() {
+      const snapshot = await db.collection("diaryEntries").orderBy("date", "desc").get();
+      entriesDiv.innerHTML = snapshot.docs.map(doc => {
+        const d = doc.data();
+        return `<div><strong>${d.title}</strong> (${d.date})<br>${d.content}</div><hr>`;
+      }).join('');
+    }
+
+    loadEntries();
+  </script>
 </body>
 </html>
-
